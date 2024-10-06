@@ -1,6 +1,8 @@
-# Chapter1: Programming Assignments
+# Programming Assignments
 
-This is the programming assignments for the first chapter of the course.
+This is the programming assignments of the course.
+
+## Chapter 1
 
 In this part, you can get the report by ```make report``` and get the result by ```make run```. You can get all of them by ```make```.
 

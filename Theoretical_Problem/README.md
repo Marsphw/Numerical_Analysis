@@ -1,5 +1,7 @@
-# Chapter1: Theoretical Problems
+# Theoretical Problems
 
-This is the theoretical problems section of Chapter 1.
+This is the theoretical problems section of course.
+
+## Chapter 1
 
 In this part, you can get my report by ```make report```.
