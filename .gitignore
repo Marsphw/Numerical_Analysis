@@ -1,0 +1,13 @@
+**/.vscode/*
+*.exe
+*.pdf
+*.txt
+*blx.bib 
+*.log 
+*.out 
+*.pdf 
+*.run.xml 
+*.synctex.gz 
+*.aux 
+*.bbl 
+*.blg
