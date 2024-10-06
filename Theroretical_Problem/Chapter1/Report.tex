@@ -1,0 +1,235 @@
+\documentclass[a4paper]{article}
+\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+%\addbibresource{citation.bib}
+
+\begin{document}
+% =================================================
+\title{Numerical Analysis homework \# 1}
+
+\author{Haowei Peng \ 3220104816
+  \thanks{E-mail address: \texttt{3220104816@zju.edu.cn}}}
+\affil{(Information and Computing Science), Zhejiang University }
+
+
+\date{Due time: \today}
+
+\maketitle
+
+% ============================================
+\section*{I. Interval of Bisection Method}
+
+\subsection*{I-a}
+\label{sec:1.a}
+
+For the width of the interval at the $n-$th step, we can solve it by the formula:
+\begin{equation}
+    h_n = \frac{b - a}{2^{n - 1}}
+    \label{eq:1.a}
+\end{equation}
+where we assume the initial interval $[a,\ b]$ is given, and $n$ is smaller than the maximum number of iterations.
+
+\subsection*{I-b}
+
+For the supremum of the distance between the root $r$ and the midpoint of the interval, we first assume that we are at the $n-$th step, and the interval is supposed as $[a_n,\ b_n]$. 
+Then for the root $r \in [a_n,\ b_n]$ and midpoint $m = \cfrac{a_n + b_n}{2}$, we can get the equation obviously with result in \ref{eq:1.a}:
+\begin{equation}
+    |r - m| \leqslant |a - m| = \frac{1}{2} h_n = \frac{b - a}{2^n}
+    \label{eq:1.b}
+\end{equation}
+
+Therefore, the supremum of the distance between the root $r$ and the midpoint of the interval is $\cfrac{b - a}{2^n}$.
+
+\section*{II. Proof in the number of iterations of Bisection Method}
+
+\begin{proof}
+As the relative error is $\varepsilon$, so we can know:
+\begin{equation}
+    \frac{|x^{*} - x|}{x^{*}} \leqslant \varepsilon
+    \label{eq:2.relative_error}
+\end{equation}
+where $x^{*}$ is the accurate root of the equation, and $x$ is the approximated root.
+
+Obviously, we have $x,\ x^{*} \geqslant a_0$, and according to result in \ref{eq:1.a} we can reexpress the formula \ref{eq:2.relative_error} as follows:
+\begin{equation}
+    \frac{|x^{*} - x|}{x^{*}} \leqslant \frac{1}{a_0} \cdot \frac{b_0 - a_0}{2^{n - 1}} \leqslant \varepsilon
+    \label{eq:2.proof}
+\end{equation}
+then we can get the inequality:
+\begin{align}
+    n & \geqslant \log_2 \frac{b_0 - a_0}{a_0 \varepsilon} - 1 \notag \\
+    & = \frac{\log(b_0 - a_0) - \log \varepsilon - \log a_0}{\log 2} - 1
+    \label{eq:2.result}
+\end{align}
+
+\end{proof}
+
+\section*{III. Calculation: Newton's Method}
+
+As $p(x) = 4x^3 - 2x^2 + 3$, its derivative is $p'(x) = 12x^2 - 4x$. Then we can show the iteration series of Newton's method as follows:
+\begin{equation}
+    x_{n + 1} = x_n - \frac{p(x_n)}{p'(x_n)} = x_n - \frac{4x_n^3 - 2x_n^2 + 3}{12x_n^2 - 4x_n}
+    \label{eq:3.iteration}
+\end{equation}
+
+The result of the iteration series is:
+
+\begin{table}[htbp]
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            $n$ & $x_n$ & $p(x_n)$ \\ \hline
+            0 & -1.000000 & -3.000000 \\ \hline
+            1 & -0.812500 & -0.465820 \\ \hline
+            2 & -0.770804 & -0.020138 \\ \hline
+            3 & -0.768832 & -4.37084e-05 \\ \hline
+            4 & -0.768828 & -2.07412e-10 \\ \hline
+            5 & -0.768828 & 0.000000 \\ \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\section*{IV. A variation of Newton's Method}
+
+This variation of Newton's method can be expressed as follows:
+\begin{equation}
+    x_{n + 1} = x_n - \frac{f(x_n)}{f'(x_0)}
+    \label{eq:4.variation}
+\end{equation}
+
+According to Taylor expansion, we can get 
+\begin{equation}
+    f(x_n) = f(\alpha) + (\alpha - x_n)f'(x_n) + \frac{(\alpha - x_n)^2}{2} f''(\xi)
+    \label{eq:4.taylor}
+\end{equation}
+where $\alpha$ is the current approximation of the root, and $\xi$ is a point between $x_n$ and $\alpha$.
+
+We now define the error as 
+\begin{equation}
+    e_n = x_n - \alpha
+    \label{eq:4.error}
+\end{equation}
+so we can get
+\begin{equation}
+    \begin{aligned}
+        e_{n + 1} &= x_{n + 1} - \alpha \\
+        &= x_n - \alpha - \frac{f(x_n)}{f'(x_0)} \\
+        &= \frac{e_n f'(x_0) - f(x_n)}{f'(x_0)}
+        \label{eq:4.variation_error}
+    \end{aligned}  
+\end{equation}
+
+
+And we can use the formula \ref{eq:4.taylor} to get
+\begin{equation}
+    \begin{aligned}
+        0 = f(\alpha) = f(x_n - e_n) &= f(x_n) - e_n f'(x_n) + \frac{e_n^2}{2} f''(\xi) \\
+        0 = f(\alpha) = f(x_0 - e_0) &= f(x_0) - e_0 f'(x_0) + \frac{e_0^2}{2} f''(\xi) 
+    \end{aligned}
+    \label{eq:4.variation_taylor}
+\end{equation}
+Then we can know that 
+\begin{equation}
+    e_n f'(x_0) = \frac{e_n f(x_0)}{e_0} + \frac{e_n e_0}{2} f''(\xi)
+    \label{eq:4.variation_error_formula}
+\end{equation}
+\begin{equation}
+    e_{n + 1} = \frac{e_n f(x_0)/e_0 + e_n e_0/2 f''(\xi) - f(x_n)}{f'(x_0)}
+    \label{eq:4.variation_error_final}
+\end{equation}
+
+Consequently, we can get the final result:
+\begin{align}
+    e_{n + 1} &\approx \frac{e_n e_0 f''(\alpha)}{2f'(\alpha)} \\
+    s = 1,\ &C = \frac{e_0 f''(\alpha)}{2f'(\alpha)} 
+    \label{eq:4.variation_final}
+\end{align}
+
+\section*{V. Convergence of a Series}
+In this section, the iteration series is defined as follows:
+\begin{equation}
+    x_{n + 1} = \tan^{-1} x_n
+    \label{eq:5.series}
+\end{equation}
+
+For $x \in (0, \cfrac{\pi}{2})$, we can prove that $0 < x < \tan x$. Similarly, we can prove $x > \tan x > 0$ when $x \in (-\cfrac{\pi}{2}, 0)$.
+
+So in the interval $\left(-\cfrac{\pi}{2}, 0\right) \bigcup \left(0, \cfrac{\pi}{2}\right)$, the series $\{x_n\}$ is a monotonic bounded series with a limitation $\lim\limits_{n \to +\infty} x_n = 0$.
+As for the case $x_0 = 0$, we can obviously get that the series converges.
+
+\section*{VI. Calculation and Convergence of a Series}
+
+The continued fraction is defined as
+\begin{equation}
+    x = \frac{1}{p + \frac{1}{p + \frac{1}{p + \frac{1}{p + \cdots}}}}
+    \label{eq:6.continued_fraction}
+\end{equation}
+
+\subsection*{VI.1 Convergence of the series}
+
+\begin{proof}
+We can convey the formula \ref{eq:6.continued_fraction} to the following series:
+\begin{equation}
+    \begin{aligned}
+        x_1 &= \frac{1}{p} ,\quad
+        x_2 &= \frac{1}{p + \frac{1}{p}} ,\quad
+        x_3 &= \frac{1}{p + \frac{1}{p + \frac{1}{p}}} ,\quad
+        \cdots
+    \end{aligned}
+    \label{eq:6.series_1}
+\end{equation}
+\begin{equation}
+    x_{n + 1} = \frac{1}{p + x_n}
+    \label{eq:6.series_2}
+\end{equation}
+As $p > 1$, so $x_1 = \frac{1}{p} \in (0, 1)$, and $\{x_n\}$ is bounded. According to formula \ref{eq:6.continued_fraction}, we can know that $\{x_n\}$ is monotonic. 
+
+So the series $\{x_n\}$ is a convergent series.
+\end{proof}
+
+\subsection*{VI.2 Value of the series}
+
+We now know that the series is convergent, so we can calculate its value.
+
+Assume $\lim\limits_{n \to +\infty} x_n = x$, then we can get the result by using the formula \ref{eq:6.series_2}:
+\begin{equation}
+    \begin{aligned}
+        x &= \sqrt{1 + \frac{p^2}{4}} - \frac{p}{2}
+    \end{aligned}
+    \label{eq:6.value}
+\end{equation}
+
+\section*{VII. Variation of Problem II}
+
+If $a_0 < 0 < b_0$, then we do not know whether the root of the equation is positive or negative. 
+
+In the proof of problem II, I use the inequality $x^{*}, x_n \geqslant a_0$ to replace the demominator, where $x^{*}$ is the accurate root.
+In this case, we can use the absolute value of $a_0, b_0$ to control the range of the root. So we can get an inequality
+\begin{equation}
+    n \geqslant \frac{\log(b_0 - a_0) - \log \varepsilon - \log \max\{-a_0,\ b_0\}}{\log 2} - 1
+    \label{eq:7.inequality}
+\end{equation}
+
+Meantime, as the root can be very close to 0, the \textbf{relative} error is not suitable to control the number of iterations. So we can use the absolute error instead:
+\begin{equation}
+    \varepsilon = |x_n - x^{*}|
+    \label{eq:7.absolute_error}
+\end{equation}
+
+% ===============================================
+\section*{ \center{\normalsize {Acknowledgement}} }
+In problem IV, I referred to the website \href{https://math.stackexchange.com/questions/1470990/x-n1-x-n-fx-n-over-fx-0-find-c-and-s-such-that-e-n1-ce-n#:~:text=Consider%20a%20variation%20of%20Newton's%20Method%20in%20which%20only%20one}{Math Stack Exchange}.
+
+%\printbibliography
+
+%If you are not familiar with \texttt{bibtex}, 
+%it is acceptable to put a table here for your references.
+\end{document}
