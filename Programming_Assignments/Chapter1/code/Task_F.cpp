@@ -46,8 +46,8 @@ int main() {
     eq3.solve(1e-6, 1e-4, 93*pi/180.0, 33*pi/180.0);
     printf("The another initial guess is 153 degrees: ");
     eq3.solve(1e-6, 1e-4, 153*pi/180.0, 33*pi/180.0);
-    printf("The another initial guess is 213 degrees: ");
-    eq3.solve(1e-6, 1e-4, 213*pi/180.0, 33*pi/180.0);
+    printf("The another initial guess is 348.5 degrees: ");
+    eq3.solve(1e-6, 1e-4, 348.5*pi/180.0, 33*pi/180.0);
 
     fclose(stdout);
     return 0;

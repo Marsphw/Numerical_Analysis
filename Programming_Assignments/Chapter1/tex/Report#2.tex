@@ -425,17 +425,32 @@ The results of the task are shown as follows:
     \cline{2-5}
     & $x_0 = 33^{\circ} ,\ x_1 = 153^{\circ}$ & 0.57547314 & $32.97218215^{\circ}$ & 0.00000687 \\
     \cline{2-5}
-    & $x_0 = 33^{\circ} ,\ x_1 = 213^{\circ}$ & 0.57547301 & $32.97217470^{\circ}$ & 0.00000001 \\
+    & $x_0 = 33^{\circ} ,\ x_1 = 348.5^{\circ}$ & 6.08247244 & $348.50000000^{\circ}$ & 0.00000000 \\
     \hline
   \end{tabular}
   \caption{Results of Task F}
   \label{tab:F}
 \end{table}
 
-From the case (c) of \cref{tab:F}, we can see that we will not get a different result if the initial value is too far away from $33^{\circ}$. 
+\subsection*{F.3\ Explanation of Task F(c)}
+
+From the case (c) of \cref{tab:F}, we can see that we will get a different result if the initial value is too far away from $33^{\circ}$. 
 Firstly we should mention that the trigonometric functions are periodic, so the root of the function will be periodic as well. 
 According to \cref{eq:Secant_method} and the result of (a), we can know that $\alpha \approx 33^{\circ}$ is extremely close to the accurate root of the equation. 
-So when we use $\alpha$ and another initial value as far away as possible from $33^{\circ}$, we can only get the same result.
+
+By plugging \cref{eq:F.components} into \cref{eq:F}, we can simplify the equation as follows:
+\begin{equation}
+    (l\sin \alpha - h - 0.5D + \frac{0.5D}{\cos \beta_1}) \sin (\alpha + \beta_1) = 0
+    \label{eq:F.re}
+\end{equation}
+
+Consequently, the task F(c) has the analytical solution 
+\begin{equation}
+  \alpha = -\beta_1
+  \label{eq:F.sol}
+\end{equation}
+
+The \cref{eq:F.sol} above can explain the another result of \cref{eq:F}.
 
 % ===============================================
 \section*{ \center{\normalsize {Acknowledgement}} }
@@ -449,6 +464,8 @@ In the process of finishing the task, I get help from the \href{https://kimi.moo
 And I check the official documents of some packages of \TeX \ such as \textit{algorithm2e}, \textit{cleveref} and so on.
 
 Besides, I use 3.14159265358979323846 to approximate $\pi$ in these tasks.
+
+For the task F(c), I exchange the ideas with Yuqing Yan. He firstly get a root $x = -11.5^{\circ}$, and then I get the analytical solution $\alpha = -\beta_1$.
 
 \printbibliography
 
