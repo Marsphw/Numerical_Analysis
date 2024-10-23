@@ -1,0 +1,485 @@
+\documentclass[a4paper]{article}
+\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\hypersetup{
+    colorlinks=true,    % 彩色链接
+    linkcolor=blue,      % 内部链接的颜色
+    citecolor=red,      % 引用的颜色
+    urlcolor=cyan       % 外部链接的颜色
+}
+\usepackage{geometry}
+\usepackage[lined, ruled]{algorithm2e}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{equation}{Equation}{Equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+
+\crefalias{algocf}{algorithm}
+
+\renewcommand\arraystretch{1.8}
+
+\addbibresource{citation.bib}
+
+\begin{document}
+% =================================================
+\title{\textbf{Numerical Analysis homework \# 2}}
+
+\author{Peng Haowei 3220104816
+  \thanks{E-mail address: \texttt{3220104816@zju.edu.cn}}}
+\affil{(Information and Computing Science), Zhejiang University} 
+
+\date{Due time: \today}
+
+\maketitle
+
+\section*{I.\ Calculation of Cauchy remainder}
+
+According to the Theorem 2.7 of our textbook, linear interpolation of $f$ at $x_0,\ x_1$ yields 
+\begin{equation}
+  f(x) - p_1(f; x) = \frac{f''(\xi(x))}{2}(x - x_0)(x - x_1). 
+  \label{eq:i_cauchy_remainder}
+\end{equation}
+
+And in this section we consider the case $f(x) = \frac{1}{x},\ x_0 = 1,\ x_1 = 2$.
+
+\subsection*{I.a\ Finding $\xi(x)$}
+
+To determine $\xi(x)$, we firstly need to find the formula of $p_1(f; x)$. According to the \textit{Lagrange formula}, it follows
+\begin{equation}
+  p_1(f; x) = f(x_0) \frac{x - x_1}{x_0 - x_1} + f(x_1) \frac{x - x_0}{x_1 - x_0} = \frac{3 - x}{2}.
+  \label{eq:i_p1}
+\end{equation}
+
+With \cref{eq:i_cauchy_remainder}, we have
+\begin{equation}
+  \begin{aligned}
+    f''(\xi(x)) &= \frac{1}{x}, \\
+    \xi(x) &= \sqrt[3]{2x}.
+    \label{eq:i_xi}
+  \end{aligned}
+\end{equation}
+
+\subsection*{I.b\ Continuity of $\xi(x)$}
+
+According to \cref{eq:i_xi}, the domain of $\xi$ continuously is easily extended from $(x_0, x_1)$ to $[x_0, x_1]$.
+And the extreme values are 
+\begin{equation}
+  \max \xi(x) = \sqrt[3]{4}, \quad \min \xi(x) = \sqrt[3]{2}.
+  \label{eq:i_extreme_xi}
+\end{equation} 
+
+As we know $f''(\xi(x)) = \frac{1}{x}$, it yields
+\begin{equation}
+  \max f''(\xi(x)) = 1.
+  \label{eq:i_max_f_prime}  
+\end{equation}
+
+\section*{II.\ Finding non-negative interpolation polynomial}
+
+Firstly we have the definition
+\begin{equation}
+  \mathbb{P}_m^+ = \{p: p \in \mathbb{P}_m,\ \forall x \in \mathbb{R},\ p(x) \geqslant 0\}.
+  \label{eq:ii_def}
+\end{equation}
+
+To find a non-negative interpolation polynomial $p \in \mathbb{P}_{2n}^+$, a natural idea is to square every term of the \textit{Lagrange formula}. 
+Hence we have
+\begin{equation}
+    p(x) = \sum_{k = 0}^{n} f_k l_k^2(x) = \sum_{k = 0}^{n} \left[f_k \cdot \prod_{i = 0, i \neq k}^{n} \left(\frac{x - x_i}{x_k - x_i}\right)^2\right].
+  \label{eq:ii_p}
+\end{equation}
+
+Obviously, the above \cref{eq:ii_p} can be proved that $p \in \mathbb{P}_{2n}^+$.
+
+\section*{III.\ Divided difference of $f(x) = e^x$}
+
+In this section, we consider the case $f(x) = e^x$.
+
+\section*{III.a\ Proof of the divided difference formula by induction}
+
+\begin{proof}
+  In order to prove the divided difference formula
+  \begin{equation}
+    \forall t \in \mathbb{R}, \quad f[t, t + 1, \cdots, t + n] = \frac{(e - 1)^n}{n!}e^t,
+    \label{eq:iii_div_diff}
+  \end{equation}
+  firstly we need to show that the formula holds for $n = 0$. 
+  
+  As $n = 0$, $f[t] = f(t) = e^t$, and according to \cref{eq:iii_div_diff}, we have $f[t] = \frac{(e - 1)^0}{0!}e^t = e^t$. So it holds for $n = 0$.
+  
+  For the inductive step, we assume that the formula holds for $n = k$, and we want to show that it also holds for $n = k + 1$. 
+  With the Theorem 2.17 in our textbook, we have
+  \begin{equation}
+    \begin{aligned}
+      f[t, t + 1, \cdots, t + k + 1] &= \frac{f[t + 1, t + 2, \cdots, t + k + 1] - f[t, t + 1, \cdots, t + k]}{(t + k + 1) - t} \\
+      &= \frac{\frac{(e - 1)^k}{k!} e^{t + 1} - \frac{(e - 1)^k}{k!} e^t}{k + 1} \\
+      &= \frac{(e - 1)^k}{k!(k + 1)}e^t(e - 1) \\
+      &= \frac{(e - 1)^{k + 1}}{(k + 1)!}e^t,
+    \end{aligned}
+    \label{eq:iii_induction}
+  \end{equation}
+  so the \cref{eq:iii_div_diff} holds for $n = k + 1$.
+\end{proof}
+
+\subsection*{III.b\ Finding the error}
+
+We need to find the $\xi \in (0, n)$ satisfying 
+\begin{equation}
+  f[0, 1, \cdots, n] = \frac{1}{n!}f^{(n)}(\xi).
+  \label{eq:iii_xi}
+\end{equation}
+
+According to \cref{eq:iii_div_diff}, we have
+\begin{equation}
+  f[0, 1, \cdots, n] = \frac{(e - 1)^n}{n!}e^0 = \frac{(e - 1)^n}{n!},
+  \label{eq:iii_f_n}
+\end{equation}
+which yields $f^{(n)}(\xi) = e^{\xi} = (e - 1)^n$. It leads to 
+\begin{equation}
+  \xi = n \ln(e - 1) \approx 0.5413 n,
+  \label{eq:iii_xi_approx}
+\end{equation}
+so $\xi$ is located to the right of the midpoint $n/2$.
+
+\section*{IV.\ Using Newton formula to interpolate}
+
+In this section, we consider $f(0) = 5,\ f(1) = 3,\ f(3) = 5,\ f(4) = 12$.
+
+\subsection*{IV.a\ Using Newton formula to find $p_3(f; x)$}
+
+Firstly we construct the following table of divided difference, 
+\begin{table}[htbp]
+  \centering
+  \renewcommand{\arraystretch}{0.9}
+  \begin{tabular}{c|cccc}
+    0 & 5 & & & \\
+    1 & 3 & -2 & & \\
+    3 & 5 & 1 & 1 & \\
+    4 & 12 & 7 & 2 & 1/4 \\
+  \end{tabular}
+  \caption{Divided difference of $f(x)$ in section IV}
+  \label{tb:iv_div_diff}
+  \renewcommand{\arraystretch}{1.0}
+\end{table}
+
+Hence we get the interpolation polynomial generated from the main diagonal and the first column of \cref{tb:iv_div_diff} as follows.
+\begin{equation}
+  p_3(f; x) = 5 - 2x + x(x - 1) + \frac{1}{4}x(x - 1)(x - 3).
+  \label{eq:iv_p3}
+\end{equation}
+
+\subsection*{IV.b\ Finding an approximate minimum}
+
+We use \cref{eq:iv_p3} to approximate $f(x)$, and we have $p'_3(x) = \frac{3x^2 - 9}{4}$. 
+Therefore, we get the approximate value for the location $x_{\min}$
+\begin{equation}
+  \begin{aligned}
+    p'_3(x_{\min}) &= \frac{3x_{\min}^2 - 9}{4} = 0, \\
+    x_{\min} &= \sqrt{3}.
+  \end{aligned}
+\end{equation}
+
+\section*{V.\ Calculation of divided difference}
+
+In this section, we consider the case $f(x) = x^7$.
+
+\subsection*{V.a\ Computing the divided difference}
+
+We have the following table of divided difference,
+\begin{table}[htbp]
+  \centering
+  \renewcommand{\arraystretch}{0.9}
+  \begin{tabular}{c|cccccc}
+    0 & 0 & & & & & \\
+    1 & 1 & 1 & & & & \\
+    1 & 1 & 7 & 6 & & & \\
+    1 & 1 & 7 & 21 & 15 & & \\
+    2 & 128 & 127 & 120 & 99 & 42 & \\
+    2 & 128 & 448 & 321 & 201 & 102 & 30 \\
+  \end{tabular}
+  \caption{Divided difference of $f(x)$ in section V}
+  \label{tb:v_div_diff}
+  \renewcommand{\arraystretch}{1.0}
+\end{table}
+
+\cref{tb:v_div_diff} implies that 
+\begin{equation}
+  f[0, 1, 1, 1, 2, 2] = 30
+  \label{eq:v_a_result}
+\end{equation}
+
+\subsection*{V.b\ Finding $\xi$ whose 5-th derivative equals to the divided difference}
+
+We have $f^{(5)}(x) = 2520x^2$, so it follows
+\begin{equation}
+  \begin{aligned}
+    f^{(5)}(\xi) = 2520\xi^2 &= 30 = f[0, 1, 1, 1, 2, 2],\\
+    \xi &= \sqrt{\frac{1}{84}} = \frac{1}{2\sqrt{21}} \approx 0.1091.
+  \end{aligned}
+  \label{eq:v_b_result}
+\end{equation}
+
+\section*{VI.\ Using Hermite interpolation to interpolate}
+
+In this section, we consider $f$ on $[0, 3]$ and we know $f(0) = 1,\ f(1) = 2,\ f'(1) = -1,\ f(3) = f'(3) = 0$.
+
+\subsection*{VI.a\ Estimating $f(2)$}
+
+We can get the following divided difference table,
+\begin{table}[htbp]
+  \centering
+  \renewcommand{\arraystretch}{0.9}
+  \begin{tabular}{c|ccccc}
+    0 & 1 &    &     &   & \\
+    1 & 2 & 1  &     &   & \\
+    1 & 2 & -1 & -2  &   & \\
+    3 & 0 & -1 &  0  & 1 & \\
+    3 & 0 & 0  & 1/2 & 1/4 & -1/4 \\
+  \end{tabular}
+  \caption{Divided difference of $f(x)$ in section VI}
+\end{table} 
+
+So the Hermite interpolation polynomial is
+\begin{equation}
+  p_4(x) = 1 + x - 2x(x - 1) + x(x - 1)^2 - \frac{1}{4}x(x - 1)^2(x - 3).
+  \label{eq:vi_p}
+\end{equation}
+Hence $f(2) \approx p_4(2) = \frac{3}{2}$.
+
+\subsection*{VI.b\ Estimating the error}
+
+With Theorem 2.37 in our textbook, we have 
+\begin{equation}
+  f(x) - p_4(f; x) = \frac{f^{(5)}(\xi)}{5!} x(x - 1)^2(x - 3)^2.
+  \label{eq:vi_error}
+\end{equation}
+
+We can easily find the maximum of $x(x - 1)^2(x - 3)^2$ on $[0, 3]$ reaches at $x = \frac{6 + \sqrt{21}}{5}$, 
+and $\max\ x(x - 1)^2(x - 3)^2 = \frac{48(102 + 7\sqrt{21})}{3125}$.
+
+Hence we have the estimation of the maximum possible error, and it follows
+\begin{equation}
+  R_4(f; x) = f(x) - p_4(f; x) \leqslant \frac{48(102 + 7\sqrt{21})}{3125} M.
+  \label{eq:vi_error_estimate}
+\end{equation}
+
+\section*{VII.\ Proof of forward and backward difference}
+
+\begin{proof}
+  We use induction to prove the following forward and backward difference formulas.
+  \begin{equation}
+    \begin{aligned}
+      \Delta^k f(x) &= k! \cdot h^k f[x_0, x_1, \cdots, x_k], \\
+      \nabla^k f(x) &= k! \cdot h^k f[x_0, x_{-1}, \cdots, x_{-k}],
+    \end{aligned}
+    \label{eq:vii_formulas}
+  \end{equation}
+  where $x_j = x + jh$.
+
+  Firstly, we show that the forward difference formula holds for $k = 1$.
+  According to the definition, 
+  \begin{equation}
+    \Delta f(x) = f(x + h) - f(x),
+    \label{eq:vii_forward_def}
+  \end{equation}
+  and with \cref{eq:vii_formulas} we have 
+  \begin{equation}
+    \Delta f(x) = h \cdot f[x_0, x_1] = h \cdot \frac{f(x_1) - f(x_0)}{x_1 - x_0} = f(x + h) - f(x),
+  \end{equation}
+  which means the forward difference formula holds for $k = 1$.
+
+  For the inductive step, we assume that the forward difference formula holds for $k = n$, and we want to show that it also holds for $k = n + 1$.
+  According to definition and Theorem 2.17 in our textbook, we have
+  \begin{equation}
+    \begin{aligned}
+      \Delta^{n + 1} f(x) &= \Delta^n f(x + h) - \Delta^n f(x), \\
+      &= n! \cdot h^n f[x_1, x_2, \cdots, x_{n + 1}] - n! \cdot h^n f[x_0, x_1, \cdots, x_n], \\
+      &= n! \cdot h^n \cdot (n + 1)h \cdot \frac{f[x_1, x_2, \cdots, x_{n + 1}] - f[x_0, x_1, \cdots, x_n]}{x_{n + 1} - x_0}, \\
+      &= (n + 1)! \cdot h^{n + 1} \cdot f[x_0, x_1, \cdots, x_{n + 1}],
+    \end{aligned}
+    \label{eq:vii_forward_induction}
+  \end{equation}
+  so the forward difference formula holds for $k = n + 1$. 
+  
+  Consequently, the part of forward difference of \cref{eq:vii_formulas} can be derived by mathematical induction. 
+
+  The part of backward difference can be proved similarly.
+\end{proof}
+
+\section*{VIII.\ Proof of the connection between divided difference and partial derivative}
+
+\begin{proof}
+  According to Corollary 2.15 in our textbook, we have 
+  \begin{equation}
+    f[x_0, x_0, x_1, \cdots, x_n] = f[x_0, x_1, \cdots, x_n, x_0].
+    \label{eq:viii_corollary}
+  \end{equation}
+  As $f$ is differentiable at $x_0$, $f$ is continuous at $x_0$, which implies
+  \begin{equation}
+    \begin{aligned}
+      \lim_{h \to 0} f(x_0 + h) &= f(x_0), \\
+      \lim_{h \to 0} f[x_0, x_1, \cdots, x_{n - 1}, x_0 + h] &= f[x_0, x_1, \cdots, x_{n - 1}, x_0].
+    \end{aligned}
+    \label{eq:viii_continuous}
+  \end{equation}
+  By definition, it follows 
+  \begin{equation}
+    \begin{aligned}
+      \frac{\partial}{\partial x_0} f[x_0, x_1, \cdots, x_n] &= \lim_{h \to 0} \frac{f[x_0 + h, x_1, \cdots, x_n] - f[x_0, x_1, \cdots, x_n]}{h}, \\
+      &= \lim_{h \to 0} \frac{f[x_1, x_2, \cdots, x_n, x_0 + h] - f[x_0, x_1, \cdots, x_n]}{x_0 + h - x_0}, \\
+      &= \lim_{h \to 0} f[x_0, x_1, \cdots, x_{n - 1}, x_0 + h], \\
+      &= f[x_0, x_1, \cdots, x_{n - 1}, x_0], \\
+      &= f[x_0, x_0, x_1, \cdots, x_n].
+    \end{aligned}
+    \label{eq:viii_partial_derivative}
+  \end{equation}
+\end{proof}
+
+As for the partial derivative with respect to one of the other variables, we can not get the result similarly because of the uncertainty about continuity.
+
+\section*{IX.\ A min-max problem}
+
+In this section, we consider $\min \max\limits_{x \in [a, b]} |a_0 x^n + a_1 x^{n-1} + \cdots + a_{n-1} x + a_n|$.
+
+As $a_0 \ne 0$ is fixed, our goal is equal to consider 
+\begin{equation}
+  \min \max\limits_{x \in [a, b]} |x^n + t_1 x^{n - 1} + \cdots + t_{n-1} x + t_n|,
+  \label{eq:ix_min_max}
+\end{equation}
+where $t_i = \frac{a_i}{a_0},\ i = 1, 2, \cdots, n$.
+
+Denote $f(x) = x^n + t_1 x^{n - 1} + \cdots + t_{n-1} x + t_n$. Obviously the maximum occurs only at the extrema points of $f$ or $x = a$ or $x = b$. 
+So the minimum of $\max\limits_{x \in [a, b]} |x^n + t_1 x^{n - 1} + \cdots + t_{n-1} x + t_n|$ reaches when $|f(a)| = |f(b)| = |f(\xi)|$, where $\xi$ is one of the extrema points of $f$.
+
+Denote $M = f(a)$, then 
+\begin{equation}
+  \min \max\limits_{x \in [a, b]} |x^n + t_1 x^{n - 1} + \cdots + t_{n-1} x + t_n| = |a_0| \cdot M.
+  \label{eq:ix_min_max_final}
+\end{equation}
+
+\section*{X.\ Proof of a theorem imitating that of Chebyshev Theorem}
+
+For a fixed $a$, define $\mathbb{P}_n^a := \{p\in \mathbb{P}_n: p(a) = 1\}$ and a polynomial $\hat{p}_n(x) := \frac{T_n(x)}{T_n(a)} \in \mathbb{P}_n^a$.
+
+What we need to prove is 
+\begin{equation}
+  \forall p \in \mathbb{P}_n^a, \quad ||\hat{p}_n||_{\infty} \leqslant ||p||_{\infty}.
+  \label{eq:x_target}
+\end{equation}
+
+\begin{proof}
+  Obviously, we have
+  \begin{equation}
+    \hat{p}_n(a) = \frac{T_n(a)}{T_n(a)} = 1.
+    \label{eq:x_initial_condition}
+  \end{equation}
+  Suppose \cref{eq:x_target} does not hold. Then it implies that 
+  \begin{equation}
+    \exists p \in \mathbb{P}_n^a, \quad ||\hat{p}_n||_{\infty} > ||p||_{\infty}.
+    \label{eq:x_exist_p}
+  \end{equation}
+  Consider the polynomial $Q(x) = \hat{p}_n(x) - p(x)$. By the Theorem 2.45 in our textbook, $T_n(x)$ assumes its extrema $n + 1$ times at the points $x'_k = \cos \frac{k}{n} \pi$. 
+  Consequently, 
+  \begin{equation}
+    Q(x'_k) = \hat{p}_n(x'_k) - p(x'_k) = \frac{(-1)^k}{T_n(a)} - p(x'_k), \quad k = 0, 1, \cdots, n.
+    \label{eq:x_Q}
+  \end{equation}
+  With \cref{eq:x_exist_p}, we know that $Q(x)$ has alternating signs at these $n + 1$ points. Hence $Q(x)$ must have $n$ zeros on [-1, 1]. 
+  As the fixed $a > 1$ is also a zero of $Q(x)$, so it has $n + 1$ zeros. However, by the construction of $Q(x)$, the degree of it is at most $n$. 
+  Therefore, $Q(x) \equiv 0$ and $p(x) = \hat{p}_n(x)$, which is a contradiction to \cref{eq:x_exist_p}.
+\end{proof}
+
+\section*{XI.\ Detailed proof of Lemma 2.53}
+
+Firstly we have the definition of \textit{Bernstein base polynomials} of degree $n \in \mathbb{N}^+$ as follows:
+\begin{equation}
+  \forall k = 0, 1, \cdots, n \quad b_{n, k}(t) := \binom{n}{k} t^k (1 - t)^{n - k}
+  \label{eq:xi_bernstein_base}
+\end{equation}
+and $b_{n, k} = 0$ for all other values of the integer $k$.
+
+\begin{proof}
+  By \cref{eq:xi_bernstein_base}, we have 
+  \begin{equation}
+    \begin{aligned}
+      b_{n - 1, k}(t) &= \binom{n - 1}{k} t^k (1 - t)^{n - k - 1}, \\
+      b_{n, k + 1}(t) &= \binom{n}{k + 1} t^{k + 1} (1 - t)^{n - k - 1}.
+    \end{aligned}
+    \label{eq:xi_bernstein_base_recurrence}
+  \end{equation}
+
+  So it follows 
+  \begin{equation}
+    \begin{aligned}
+      & \frac{n - k}{n} b_{n, k}(t) + \frac{k + 1}{n} b_{n, k + 1}(t)  \\
+      =\ & \frac{n - k}{n} \binom{n}{k} t^k (1 - t)^{n - k} + \frac{k + 1}{n} \binom{n}{k + 1} t^{k + 1} (1 - t)^{n - k - 1} \\
+      =\ & t^k (1 - t)^{n - k - 1} \cdot \left[\frac{n - k}{n} \binom{n}{k} (1 - t) + \frac{k + 1}{n} \binom{n}{k + 1} t\right] \\
+      =\ & t^k (1 - t)^{n - k - 1} \cdot \left[\frac{n - k}{n} \frac{n!}{k!(n - k)!} (1 - t) + \frac{k + 1}{n} \frac{n!}{(k + 1)!(n - k - 1)!} t\right] \\
+      =\ & t^k (1 - t)^{n - k - 1} \cdot \left[\frac{(n - 1)!}{k!(n - k - 1)!}(1 - t) + \frac{(n - 1)!}{k!(n - k - 1)!} t\right] \\
+      =\ & t^k (1 - t)^{n - k - 1} \cdot \left[\frac{(n - 1)!}{k!(n - k - 1)!}\right] \\
+      =\ & \binom{n - 1}{k} t^k (1 - t)^{n - k - 1} \\
+      =\ & b_{n - 1, k}(t),
+    \end{aligned}
+    \label{eq:xi_proof}
+  \end{equation}
+  which means 
+  \begin{equation}
+    b_{n - 1, k}(t) = \frac{n - k}{n} b_{n, k}(t) + \frac{k + 1}{n} b_{n, k + 1}(t).
+    \label{eq:xi_result}
+  \end{equation}
+\end{proof}
+
+\section*{XII.\ Detailed proof of Lemma 2.55}
+
+In this section, we need to prove
+\begin{equation}
+  \forall k = 0, 1, \cdots, n, \quad \int_{0}^{1} b_{n, k}(t) \mathrm{d}t = \frac{1}{n + 1}.\
+  \label{eq:xii_integral} 
+\end{equation}
+
+\begin{proof}
+  \begin{equation}
+    \begin{aligned}
+      & \int_{0}^{1} b_{n, k}(t) \mathrm{d}t \\
+      =\ & \int_{0}^{1} \binom{n}{k} t^k (1 - t)^{n - k} \mathrm{d}t \\
+      =\ & \int_{0}^{1} \frac{n!}{k!(n - k)!} t^k (1 - t)^{n - k} \mathrm{d}t \\
+      =\ & \int_{0}^{1} \frac{n!}{(k + 1)k!(n - k)!} (1 - t)^{n - k} \mathrm{d} t^{k + 1} \\
+      =\ & \frac{n!}{(k + 1)k!(n - k)!} (1 - t)^{n - k} t^{k + 1} \Big|_{0}^{1} - \int_{0}^{1} \frac{n!}{(k + 1)!(n - k)!} t^{k + 1} \mathrm{d} (1 - t)^{n - k} \\
+      =\ & \int_{0}^{1} \frac{n!}{(k + 1)!(n - k)!} t^{k + 1} (1 - t)^{n - k - 1} \mathrm{d}t \\
+      =\ & \int_{0}^{1} \binom{n}{k + 1} t^{k + 1} (1 - t)^{n - k - 1} \mathrm{d}t \\
+      =\ & \int_{0}^{1} b_{n, k + 1}(t) \mathrm{d}t.
+    \end{aligned}
+    \label{eq:xii_integral_proof}
+  \end{equation}
+
+  In addition, we have 
+  \begin{equation}
+    \int_{0}^{1} b_{n, n}(t) \mathrm{d}t = \int_{0}^{1} \binom{n}{n} t^n \mathrm{d}t = \frac{1}{n + 1} t^{n + 1} \Big|_{0}^{1} = \frac{1}{n + 1}.
+    \label{eq:xii_integral_n}
+  \end{equation}
+
+  Therefore, \cref{eq:xii_integral} holds.
+\end{proof}
+
+% ===============================================
+\section*{ \center{\normalsize {Acknowledgement}} }
+
+In the process of writing this report, I use \href{https://kimi.moonshot.cn/}{\textit{Kimi AI}} to help me translate something.
+
+\printbibliography
+
+\end{document}
