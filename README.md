@@ -29,7 +29,7 @@ This chapter focuses on the numerical methods of polynomial interpolation. *Inte
 
 ### Theoretical Problems
 
-The answer can be seen in the [Chapter2_Theoretical]{https://github.com/Marsphw/Numerical_Analysis/tree/main/Theroretical_Problem/Chapter2}. This task includes the theoretical analysis of the interpolation methods, such as the error analysis, the calculation of the interpolation polynomial, and some proof of the lemma from our textbook.
+The answer can be seen in the [Chapter2_Theoretical](https://github.com/Marsphw/Numerical_Analysis/tree/main/Theoretical_Problem/Chapter2). This task includes the theoretical analysis of the interpolation methods, such as the error analysis, the calculation of the interpolation polynomial, and some proof of the lemma from our textbook.
 
 ### Programming Assignments
 
