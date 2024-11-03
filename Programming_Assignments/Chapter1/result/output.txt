@@ -1,0 +1,45 @@
+Problem B:
+Question1: 1/x - tan(x) on [0, pi/2]
+The root approximates to 0.86026453, and the error is 0.00025565.
+Question2: 1/x - 2^x on [0, 1]
+The root approximates to 0.64113159, and the error is 0.00019027.
+Question3: 2^(-x) + e^x + 2cos(x) - 6 on [1, 3]
+The root approximates to 1.82940674, and the error is 0.00009490.
+Question4: (x^3 + 4x^2 + 3x^2 + 5)/(2x^3 - 9x^2 + 18x - 2) on [0, 4]
+The root approximates to 0.11785986, and the error is -20286.88841693.
+
+Problem C:
+The root of near 4.50000000 approximates to 4.49340946, and the error is -0.00000000.
+The root of near 7.70000000 approximates to 7.72525184, and the error is -0.00000000.
+
+Problem D:
+Question1.1: sin(x/2) - 1 with x0 = 0 and x1 = pi/2
+The root approximates to 3.13879506, and the error is -0.00000098.
+Question1.2: sin(x/2) - 1 with x0 = 7pi/2 and x1 = 4pi
+The root approximates to 15.70602631, and the error is -0.00000047.
+Question2.1: e^x - tan(x) with x0 = 1 and x1 = 1.4
+The root approximates to 1.30632693, and the error is 0.00000017.
+Question2.2: e^x - tan(x) with x0 = -3 and x1 = -3.4
+The root approximates to -3.09641230, and the error is -0.00000000.
+Question3.1: x^3 - 12x^2 + 3x + 1 with x0 = 0 and x1 = -0.5
+The root approximates to -0.18868540, and the error is -0.00000001.
+Question3.2: x^3 - 12x^2 + 3x + 1 with x0 = 0 and x1 = 0.5
+The root approximates to 0.45154321, and the error is 0.00000011.
+
+Problem E:
+Result by bisection method:
+The root approximates to 0.16406250, and the error is -0.04149324.
+Result by Newton's method:
+The root of near 0.10000000 approximates to 0.16616603, and the error is -0.00000012.
+Result by secant method:
+The root approximates to 0.16616611, and the error is 0.00000155.
+
+Problem F:
+Task a:
+The root of near 0.57595865 approximates to 0.57547301, and the error is 0.00000000.
+Task b:
+The root of near 0.57595865 approximates to 0.57890658, and the error is 0.00000000.
+Task c:
+The another initial guess is 93 degrees: The root approximates to 0.57547301, and the error is 0.00000000.
+The another initial guess is 153 degrees: The root approximates to 0.57547314, and the error is 0.00000687.
+The another initial guess is 348.5 degrees: The root approximates to 6.08247244, and the error is 0.00000000.

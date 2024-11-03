@@ -1,0 +1,2 @@
+The average weight predicted of Sp1 is 14640.2578
+The average weight predicted of Sp2 is 2981.4769

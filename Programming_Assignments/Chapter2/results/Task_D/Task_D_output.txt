@@ -1,0 +1,3 @@
+The position of the car for t = 10s is 742.5028.
+The velocity of the car for t = 10s is 48.3817.
+The maximum value of the velocity is 119.4160.

@@ -22,3 +22,15 @@ The answer can be seen in the [Chapter1_Theoretical](https://github.com/Marsphw/
 ### Programming Assignments
 
 The programming assignments are in the [Chapter1_Programming](https://github.com/Marsphw/Numerical_Analysis/tree/main/Programming_Assignments/Chapter1). They focus on the implementation of the three methods in C++, with the oriented object programming style.
+
+## Chapter 2: Polynomial Interpolation 
+
+This chapter focuses on the numerical methods of polynomial interpolation. *Interpolation* constructs new data points within the range of a discrete set of known data points. Given the excellent properties(including continuity, smoothness, and differentiability), we typically choose polynomial for interpolation. We have **the Lagrange formula, the Newton formula, the Hermite interpolation and the Bezier curve**.
+
+### Theoretical Problems
+
+The answer can be seen in the [Chapter2_Theoretical]{https://github.com/Marsphw/Numerical_Analysis/tree/main/Theroretical_Problem/Chapter2}. This task includes the theoretical analysis of the interpolation methods, such as the error analysis, the calculation of the interpolation polynomial, and some proof of the lemma from our textbook.
+
+### Programming Assignments
+
+The programming assignments are in the [Chapter2_Programming](https://github.com/Marsphw/Numerical_Analysis/tree/main/Programming_Assignments/Chapter2). The tasks are to implement the Newton formula, the Hermite interpolation, and the Bezier curve in C++, with necessary figures and explanations.
