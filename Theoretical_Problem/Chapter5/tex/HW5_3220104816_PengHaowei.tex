@@ -1,0 +1,367 @@
+\documentclass[a4paper]{article}
+\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\hypersetup{
+    colorlinks=true,    % 彩色链接
+    linkcolor=blue,     % 内部链接的颜色
+    citecolor=red,      % 引用的颜色
+    urlcolor=cyan       % 外部链接的颜色
+}
+\usepackage{geometry}
+\usepackage[lined, ruled]{algorithm2e}
+\usepackage{listings}
+\lstset{
+    basicstyle = \ttfamily,
+    keywordstyle = \color{blue},
+    commentstyle = \color{green!50!black}\itshape,
+    stringstyle = \color{orange},
+    numbers = left,
+    numberstyle = \scriptsize,
+    numbersep = 5pt,
+    breaklines = true,
+}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+\titleformat{\section}{\Large\bfseries}{\Roman{section}}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\Roman{section}.\alph{subsection}}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\Roman{section}.\alph{subsection}.\roman{subsubsection}}{1em}{}
+
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{equation}{Equation}{Equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+
+\crefalias{algocf}{algorithm}
+
+\renewcommand\arraystretch{1.2}
+
+%\addbibresource{citation.bib}
+
+\begin{document}
+% =================================================
+\title{\textbf{Numerical Analysis theoretical homework \# 5}}
+
+\author{Peng Haowei 3220104816
+  \thanks{E-mail address: \texttt{3220104816@zju.edu.cn}}}
+\affil{(Information and Computing Science), Zhejiang University} 
+
+\date{Due time: \today}
+
+\maketitle
+
+\section{Proof of Theorem 5.7}
+
+In this section, we consider a inner product as 
+\begin{equation}
+    \langle u, v\rangle := \int_a^b \rho(t) u(t) \overline{v(t)}\ \mathrm{d}t,
+    \label{eq:1_inner_product}
+\end{equation}
+where $\bar{v(t)}$ is the complex conjugate of $v(t)$ and the \textit{weight function} $\rho(x) \in \mathcal[a, b]$ satisfies $\rho(x) > 0$ for all $x \in (a, b)$.
+
+And the 2-norm is defined as
+\begin{equation}
+    \|u\|_2 := \left(\int_a^b \rho(t) |u(t)|^2\ \mathrm{d}t\right)^{\frac{1}{2}}.
+    \label{eq:1_2_norm}
+\end{equation}
+
+\begin{proof}
+Above all, we need to prove the set $\mathcal{C}[a, b]$ of continuous function over $[a, b]$ is a vector space over $\mathbb{C}$.
+
+\begin{enumerate}
+    \item commutativity: for any $f, g \in \mathcal{C}[a, b]$, we have $f + g = g + f$ obviously.
+    \item associativity: for any $f, g, h \in \mathcal{C}[a, b]$, we have $(f + g) + h = f + (g + h)$.
+    \item compatibility: for any $f \in \mathcal{C}[a, b]$ and $m, n \in \mathbb{C}$, we have $(mn)f = m(nf)$.
+    \item additive identity: for any $f \in \mathcal{C}[a, b]$, we have $0 + f = f$.
+    \item additive inverse: for any $f \in \mathcal{C}[a, b]$, we have $g(x) = -f(x)$ for all $x \in [a, b]$ to satisfy $f + g = 0$.
+    \item multiplicative identity: for any $f \in \mathcal{C}[a, b]$, we have $1f = f$.
+    \item distributive laws: for any $f, g \in \mathcal{C}[a, b]$ and $m, n \in \mathbb{C}$, we have $m(f + g) = mf + mg$ and $(m + n)f = mf + nf$.
+\end{enumerate}
+
+Consequently, the set $\mathcal{C}[a, b]$ is a vector space over $\mathbb{C}$.
+Then for the proof of inner product space, it follows
+
+\begin{enumerate}
+    \item real positivity: for any $f \in \mathcal{C}[a, b]$, we have $\langle f, f\rangle = \int_a^b \rho(t) f(t) \overline{f(t)} \mathrm{d}t = \int_a^b \rho(t) (f(t))^2 \mathrm{d}t \geqslant 0$.
+    \item definiteness: from $\langle f, f \rangle = \int_a^b \rho(t) (f(t))^2 \mathrm{d}t$, we have $\langle f, f \rangle = 0$ iff $f = 0$.
+    \item additivity in the first slot: for any $f, g, h \in \mathcal{C}[a, b]$, we have $\langle f + g, h \rangle = \int_a^b \rho(t) (f + g)(t) \overline{h(t)} \mathrm{d}t = \int_a^b \rho(t) (f(t) + g(t)) \overline{h(t)} \mathrm{d}t = \int_a^b \rho(t) f(t) \overline{h(t)} \mathrm{d}t + \int_a^b \rho(t) g(t) \overline{h(t)} \mathrm{d}t = \langle f, h \rangle + \langle g, h \rangle$.
+    \item homogeneity in the first slot: for any $f, g \in \mathcal{C}[a, b]$ and $m \in \mathbb{C}$, we have $\langle mf, g \rangle = \int_a^b \rho(t) (mf)(t) \overline{g(t)} \mathrm{d}t = m\int_a^b \rho(t) f(t) \overline{g(t)} \mathrm{d}t = m\langle f, g \rangle$.
+    \item conjugate symmetry: for any $f, g \in \mathcal{C}[a, b]$, we have $\langle f, g \rangle = \int_a^b \rho(t) f(t) \overline{g(t)} \mathrm{d}t = \int_a^b \overline{\rho(t)} \overline{g(t)} \overline{(\overline{f(t)})} \mathrm{d}t = \overline{\int_a^b \rho(t) g(t) \overline{f(t)} \mathrm{d}t} = \overline{\langle g, f \rangle}$.
+\end{enumerate}
+Therefore, the set $\mathcal{C}[a, b]$ is an inner-product space over $\mathbb{C}$ with its inner product as \cref{eq:1_inner_product}.
+
+According to the definition, we have
+\begin{equation}
+    \|u\|_2 =  \sqrt{\langle u, u \rangle} = \left(\int_a^b \rho(t) |u(t)|^2 \mathrm{d}t\right)^{\frac{1}{2}}.
+    \label{eq:1_2_norm_2}
+\end{equation}
+
+\end{proof}
+
+\section{Problems of the Chebyshev polynomials}
+
+\subsection{Show the orthogonality}
+
+The Chebyshev polynomials of the first kind are defined as
+\begin{equation}
+    T_n(x) = \cos (n \arccos x).
+    \label{eq:2_chebyshev_polynomials}
+\end{equation}
+
+\begin{proof}
+    Denote $x = \cos \theta$, then we have
+    \begin{equation}
+        \mathrm{d}x = -\sin \theta\ \mathrm{d} \theta = -\frac{1}{\sqrt{1 - x^2}}\ \mathrm{d}\theta.
+        \label{eq:2_chebyshev_polynomials_derivative}
+    \end{equation}
+
+    For all $m, n \in \mathbb{N},\ m \ne n$, it follows
+    \begin{equation}
+        \begin{aligned}
+            \int_{-1}^1 T_m(x) T_n(x) \frac{1}{\sqrt{1 - x^2}} \mathrm{d}x &= \int_0^{\pi} \cos (m\theta) \cos (n\theta)\ \mathrm{d} \theta \\
+            &= \frac{1}{2} \int_0^{\pi} [\cos ((m + n)\theta) - \cos ((m - n)\theta)]\ \mathrm{d} \theta \\
+            &= \frac{\sin((m + n)\theta)}{m + n} \Big|_0^{\pi} - \frac{\sin((m - n)\theta)} {m - n} \Big|_0^{\pi} \\
+            &= 0,
+        \end{aligned}
+        \label{eq:2_chebyshev_polynomials_orthogonality}
+    \end{equation}
+    which yields the orthogonality of the Chebyshev polynomials.
+\end{proof}
+
+\subsection{Normalize some polynomials to get an orthonormal system}
+
+In this problem, we need to normalize the first three Chebyshev polynomials of the first kind to get an orthonormal system.
+
+We have 
+\begin{equation}
+    \begin{aligned}
+        \langle T_0, T_0 \rangle &= \int_0^{\pi} 1\ \mathrm{d}\theta = \pi \\
+        \langle T_1, T_1 \rangle &= \int_0^{\pi} \cos^2 \theta\ \mathrm{d}\theta = \frac{\pi}{2} \\
+        \langle T_2, T_2 \rangle &= \int_0^{\pi} \cos^2 2\theta\ \mathrm{d}\theta = \frac{\pi}{2},
+    \end{aligned}
+    \label{eq:2_chebyshev_polynomials_norm}
+\end{equation}
+hence the result of normalization is 
+\begin{equation}
+    u_1^* = \frac{1}{\sqrt{\pi}},\ u_2^* = \sqrt{\frac{2}{\pi}}x,\ u_3^* = \sqrt{\frac{2}{\pi}}(2x^2 - 1).
+    \label{eq:2_chebyshev_polynomials_normalized}
+\end{equation}
+
+\section{Least-square approximation of a continuous function}
+
+In this section, we need to approximate the circular arc given by the equation
+\begin{equation}
+    y(x) = \sqrt{1 - x^2},\quad x \in [-1, 1]
+    \label{eq:3_circular_arc}
+\end{equation}
+by a quadratic polynomial.
+
+\subsection{Using Fourier expansion}
+
+As the weight function is $\rho(x) = \frac{1}{\sqrt{1 - x^2}}$, we use the Chebyshev polynomials of the first kind in \cref{eq:2_chebyshev_polynomials_normalized}, and we have the Fourier coefficient of $y(x)$ as 
+\begin{equation}
+    \begin{aligned}
+        b_1 &= \int_{-1}^1 \frac{1}{\sqrt{1 - x^2}} \frac{1}{\sqrt{\pi}} \sqrt{1 - x^2}\ \mathrm{d} x = \frac{2}{\sqrt{\pi}}, \\
+        b_2 &= \int_{-1}^1 \frac{1}{\sqrt{1 - x^2}} \sqrt{\frac{2}{\pi}}x \sqrt{1 - x^2}\ \mathrm{d} x = 0, \\
+        b_3 &= \int_{-1}^1 \frac{1}{\sqrt{1 - x^2}} \sqrt{\frac{2}{\pi}}(2x^2 - 1) \sqrt{1 - x^2} \ \mathrm{d} x = -\frac{2}{3}\sqrt{\frac{2}{\pi}}.
+    \end{aligned}
+    \label{eq:3_fourier_coefficient}
+\end{equation}
+
+So the minimizing polynomial is 
+\begin{equation}
+    \hat{\varphi} = \frac{2}{\pi} - \frac{4}{3\pi}(2x^2 - 1).
+    \label{eq:3_minimizing_polynomial}
+\end{equation}
+
+\subsection{Using normal equations}
+
+Assuming that the best approximation of $y(x)$ is $\hat{\varphi} = a_0 + a_1 x + a_2 x^2$. To find it, we first construct the Gram matrix with $\rho = \frac{1}{\sqrt{1 - x^2}}$:
+\begin{equation}
+    G(1, x, x^2) = 
+    \begin{bmatrix}
+        \langle 1, 1 \rangle & \langle 1, x \rangle & \langle 1, x^2 \rangle \\
+        \langle x, 1 \rangle & \langle x, x \rangle & \langle x, x^2 \rangle \\
+        \langle x^2, 1 \rangle & \langle x^2, x \rangle & \langle x^2, x^2 \rangle \\
+    \end{bmatrix}
+    = \begin{bmatrix}
+        \pi & 0 & \pi/2 \\
+        0 & \pi/2 & 0 \\
+        \pi/2 & 0 & \pi/2 \\
+    \end{bmatrix}.
+    \label{eq:3_gram_matrix}
+\end{equation}
+
+Then we calculate the vector 
+\begin{equation}
+    \mathbf{c} = \begin{bmatrix}
+        \langle y(x), 1 \rangle \\
+        \langle y(x), x \rangle \\
+        \langle y(x), x^2 \rangle \\
+    \end{bmatrix}
+    = \begin{bmatrix}
+        2 \\ 0 \\ 2/3 \\
+    \end{bmatrix}.
+    \label{eq:3_vector_c}
+\end{equation}
+
+The normal equations then yield 
+\begin{equation}
+    a_0 = \frac{8}{3\pi},\ a_1 = 0,\ a_2 = -\frac{4}{3\pi},
+    \label{eq:3_normal_equations}
+\end{equation}
+which means the result of approximation is 
+\begin{equation}
+    \hat{\varphi} = \frac{8}{3\pi} - \frac{4}{3\pi}x^2.
+    \label{eq:3_least_square_approximation}
+\end{equation}
+
+\section{Discrete least square via orthonormal polynomials}
+
+In this section, we consider the table of sales record as follows:
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{c|cccccccccccc}
+        \hline
+        $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\ \hline
+        $y$ & 256 & 201 & 159 & 61 & 77 & 40 & 17 & 25 & 103 & 156 & 222 & 345 \\ \hline
+    \end{tabular}
+    \caption{Sales record}
+    \label{tab:sales_record}
+\end{table}
+
+\subsection{Construct the orthonormal system}
+\label{sec:construct_orthonormal_system}
+
+In this section, we use 
+\begin{equation}
+    \langle u(t), v(t) \rangle = \sum_{i = 1}^N \rho(t_i) u(t_i) v(t_i)
+    \label{eq:4_inner_product}
+\end{equation}
+as the inner product with $N = 12$ and $\rho(x) = 1$.
+
+We have the independent list 
+\begin{equation}
+    u_1 = 1,\ u_2 = x,\ u_3 = x^2,
+    \label{eq:4_independent_list}
+\end{equation}
+and firstly we get 
+\begin{equation}
+    v_1 = u_1 = 1,\ u_1^* = v_1 / \|v_1\| = \frac{1}{\sqrt{12}} = \frac{\sqrt{3}}{6}.
+    \label{eq:4_first_column}
+\end{equation}
+
+According to the Gram-Schmidt process, it follows
+\begin{equation}
+    \begin{aligned}
+        v_2 &= u_2 - \langle u_2, v_1^* \rangle v_1^* = x - (\frac{\sqrt{3}}{6})^2 \sum_{i = 1}^N x_i = x - \frac{13}{2}, \\
+        u_2^* &= \frac{v_2}{\|v_2\|} = \frac{x - \frac{13}{2}}{\sqrt{143}}.
+    \end{aligned}
+    \label{eq:4_second_column}
+\end{equation}
+
+\begin{equation}
+    \begin{aligned}
+        v_3 &= u_3 - \langle u_3, v_1^* \rangle v_1^* - \langle u_3, v_2^* \rangle v_2^* \\
+        &= x^2 - (\frac{\sqrt{3}}{6})^2 \sum_{i = 1}^N (x_i)^2 - \frac{x - \frac{13}{2}}{\sqrt{143}} \sum_{i = 1}^N x_i^2 \cdot \frac{x_i - \frac{13}{2}}{\sqrt{143}} \\
+        &= x^2 - 13x + \frac{91}{3}, \\
+        u_3^* &= \frac{v_3}{\|v_3\|} = \frac{v_3}{\frac{2}{3\sqrt{3003}}} = \frac{\sqrt{3003}}{2002} (x^2 - 13x + \frac{91}{3}).
+    \end{aligned}
+    \label{eq:4_third_column}
+\end{equation}
+
+\subsection{Find the best approximation}
+\label{sec:find_best_approximation}
+
+To find the best approximation $\hat{\varphi} = \sum_{i = 0}^2 a_i x^i$ such that $\|y - \hat{\varphi}\| \leqslant \|y - \sum_{i = 0}^2 b_i x^i$ for all $b_i \in \mathbb{R}$, we need to project the target function onto the orthonormal system we get in \cref{sec:construct_orthonormal_system}.
+\begin{equation}
+    \begin{aligned}
+        \langle y, u_1^* \rangle &= \frac{\sqrt{3}}{6} \sum_{i = 1}^N y_i = \frac{\sqrt{3}}{6} \times 1662 = 277\sqrt{3} \approx 479.77807370, \\
+        \langle y, u_2^* \rangle &= \frac{1}{\sqrt{143}} \sum_{i = 1}^N x_iy_i - \frac{\sqrt{143}}{22} \sum_{i = 1}^N y_i = \frac{1}{\sqrt{143}} \times 11392 + \frac{\sqrt{143}}{22} \times 1662 \approx 49.25465439, \\
+        \langle y, u_3^* \rangle &= \frac{\sqrt{3003}}{2002} (\sum_{i = 1}^N x_i^2y_i + 13\sum_{i = 1}^N x_iy_i + \frac{91}{3}\sum_{i = 1}^N y_i) = \frac{\sqrt{3003}}{2002}(109750 - 13 \times 11392 + \frac{91}{3} \times 1662) \approx 330.33066714.
+    \end{aligned}
+    \label{eq:4_projection}
+\end{equation}
+
+Therefore, the best approximation $\hat{\varphi}$ is 
+\begin{equation}
+    \hat{\varphi} = \sum_{i = 1}^3 \langle y, u_i^* \rangle u_i^* = 9.0420 x^2 - 113.4266 x + 386.0000,
+    \label{eq:4_best_approximation}
+\end{equation}
+which is the same as the result on the Example 5.55 in the textbook.
+
+\subsection{Consider the reuse of the values}
+
+We consider the reuse of the values in our calculation with the assumption that values of $N$ and $x_i$'s are the same while the the values of $y_i$'s change.
+
+Viewing the calculation in \cref{sec:construct_orthonormal_system,sec:find_best_approximation}, we find that orthonormal system will not change as the values of $y_i$'s are different, meaning that they can be reused. For the coefficients $a_0, a_1, a_2$ of $\hat{\varphi}$, they cannot be used.
+
+By using orthonormal polynomials, we can reuse the values of bases and calculate te results with some easy arithmetic operations. When we use normal equations, we have to make a matrix calculation of $G^{-1} \mathbf{c}$.
+
+\section{Proof of the Theorem 5.66 and Lemma 5.67}
+
+First we need to define the \textit{Moore-Penrose inverse}. The \textit{Moore-Penrose inverse} or \textit{pseudoinverse} or \textit{generalized inverse} of a matrix $A \in \mathbb{F}^{m \times n}$ where $\mathbb{F} = \mathbb{R}, \mathbb{C}$ is the matrix $A^+ \in \mathbb{F}^{m \times n}$ given by 
+\begin{equation}
+    A^{\dagger} = V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T,
+    \label{eq:5_pseudoinverse}
+\end{equation}
+where $r$ is the rank of $A$ and it follows
+\begin{equation}
+    A = U \Sigma V^T,
+    \label{eq:5_svd}
+\end{equation}
+which is the singular value decomposition of $A$.
+
+\subsection{Proof of Theorem 5.66}
+
+For the first property in the theorem, we have
+\begin{equation}
+    \begin{aligned}
+        A A^{\dagger} A &= AV \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T A \\
+        &= U \Sigma_r V^T V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T U \Sigma_r V^T \\
+        &= U \Sigma_r V^T \\
+        &= A.
+    \end{aligned}
+    \label{eq:5_property1}
+\end{equation}
+
+The second property in the theorem is proved as follows.
+\begin{equation}
+    \begin{aligned}
+        A^{\dagger} A A^{\dagger} &= V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T A V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T \\
+        &= V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T U \Sigma_r V^T V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T \\
+        &= V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T  \\
+        &= A^{\dagger}.
+    \end{aligned}
+    \label{eq:5_property2}
+\end{equation}
+
+As for the Hermitian property, we have
+\begin{equation}
+    \begin{aligned}
+        (AA^{\dagger})^* &= (U \Sigma_r V^T V \begin{pmatrix} \Sigma_r^{-1} & O \\ O & O \end{pmatrix} U^T)^* \\
+        &= (U \begin{pmatrix} I_n & O \\ O & O \end{pmatrix} U^T)^* \\
+        &= (U^T)^* \begin{pmatrix} I_n & O \\ O & O \end{pmatrix} U^* \\
+        &= U \begin{pmatrix} I_n & O \\ O & O \end{pmatrix} U^T \\
+        &= AA^{\dagger}.
+    \end{aligned}
+    \label{eq:5_hermitian}
+\end{equation}
+Similarly we can proof $A^{\dagger}A$ is Hermitian.
+
+\section*{ \center{\normalsize {Acknowledgement}} }
+
+In the process of writing this report, I use \href{https://kimi.moonshot.cn/}{\textit{Kimi AI}} to help me translate something and write this report by \TeX.
+
+\end{document}

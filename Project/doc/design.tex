@@ -1,0 +1,48 @@
+\usepackage[lined, ruled]{algorithm2e}
+\usepackage{listings}
+\lstset{
+    basicstyle = \ttfamily,
+    keywordstyle = \color{blue},
+    commentstyle = \color{green!50!black}\itshape,
+    stringstyle = \color{orange},
+    numbers = left,
+    numberstyle = \scriptsize,
+    numbersep = 5pt,
+    breaklines = true,
+}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+\titleformat{\section}{\Large\bfseries}{\Roman{section}}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\Roman{section}.\alph{subsection}}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\Roman{section}.\alph{subsection}.\roman{subsubsection}}{1em}{}
+
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{equation}{Equation}{Equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+
+\crefalias{algocf}{algorithm}
+
+\renewcommand\arraystretch{1.2}
+
+%\addbibresource{citation.bib}
+
+\begin{document}
+% =================================================
+\title{\textbf{Design Document of the Project}}
+
+\author{Peng Haowei 3220104816
+  \thanks{E-mail address: \texttt{3220104816@zju.edu.cn}}}
+\affil{(Information and Computing Science), Zhejiang University} 
+
+\date{Due time: \today}
+
+\maketitle
+
+\end{document}

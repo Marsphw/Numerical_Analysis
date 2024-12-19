@@ -34,3 +34,30 @@ The answer can be seen in the [Chapter2_Theoretical](https://github.com/Marsphw/
 ### Programming Assignments
 
 The programming assignments are in the [Chapter2_Programming](https://github.com/Marsphw/Numerical_Analysis/tree/main/Programming_Assignments/Chapter2). The tasks are to implement the Newton formula, the Hermite interpolation, and the Bezier curve in C++, with necessary figures and explanations.
+
+## Chapter 3: Splines
+
+This chapter concentrates on the construction and prosperities of splines, including PP-form and B-form. **Splines** are piecewise-defined polynomial function that passes through a set of data points, with each segment between two points being a polynomial, and the entire curve is continuous.
+
+### Theoretical Problems
+
+The report can be seen in the [Chapter3_Theoretical](https://github.com/Marsphw/Numerical_Analysis/tree/main/Theoretical_Problem/Chapter3). The tasks include the calculation of splines, the proof of some equations and lemmas.
+
+### Programming Project
+
+The programming project needs us to achieve a package to implement the splines with PP-form and B-form, and give the following contents:
+1. Implement the linear spline function $\mathbb{S}_1^0$;
+2. Implement the cubic spline function $\mathbb{S}_3^2$ in PP-form with boundary conditions of periodic splines, natural splines and complete splines;
+3. Implement the same function in B-form with the same boundary conditions;
+4. Verify that we will get the same curve in PP-form and B-form when the knots and boundary conditions are the same;
+5. Support the splines of arbitrary ranks and knots in B-form;
+6. Implement the curve fitting in a plane plat;
+7. Implement the curve fitting in a sphere.
+
+## Chapter 4: Computer Arithmetic and Conditioning
+
+This chapter helps us to understand the world of computer arithmetic, including the floating-point number systems, rounding error, accuracy and stability. In the computer, the number of numbers is limited by the restriction of precision.
+
+### Theoretical Problems
+
+The report can be found in the [Chapter4_Theoretical](https://github.com/Marsphw/Numerical_Analysis/tree/main/Theoretical_Problem/Chapter4). These tasks consider the convertion of FPNs, proof of some phenomena and the analysis for some functions.
