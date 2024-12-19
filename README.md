@@ -7,7 +7,6 @@ To get the report and the results, you can input these commands in the terminal 
 3. ```make clean``` to clean the temporary files, including the executable file and the report file.
 
 In addition, there is a ```README.md``` in every folder of task, so you can get more information about it.
-
 ## Chapter 1: Solving Nonlinear Equations
 
 This chapter is mainly about the numerical methods of solving nonlinear equations. The three methods are:
@@ -61,3 +60,17 @@ This chapter helps us to understand the world of computer arithmetic, including 
 ### Theoretical Problems
 
 The report can be found in the [Chapter4_Theoretical](https://github.com/Marsphw/Numerical_Analysis/tree/main/Theoretical_Problem/Chapter4). These tasks consider the convertion of FPNs, proof of some phenomena and the analysis for some functions.
+
+## Chpater 5: Best Approximation and Least Square
+
+This chapter deals with the best approximation problem in the 2-norm. We obtain the best approximation from Fourier expansions, and apply this abstract technique to continuous and discrete least squares.
+
+### Theoretical Problems
+
+The report can be found in the [Chapter5_Theoretical](https://github.com/Marsphw/Numerical_Analysis/tree/main/Theoretical_Problem/Chapter5). In this task, we finish the proof of some theroems and lemmas in detail and solve the specific problems of best approximation.
+
+## Chapter 6: Numerical Integration and Differentiation
+
+This chapter concentrates on the calculation of integration and differntiation in our computer. It introduces a lot of formulas to approximate the integration and differentiation with the Taylor expansion as foundation.
+
+## Chapter 7: Numerical Solutions of Ordinary Differential Equations
