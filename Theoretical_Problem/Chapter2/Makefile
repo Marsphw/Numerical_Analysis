@@ -1,10 +1,7 @@
-TARGET = HW2_3220104816_PengHaowei
-
 all: report
 
 report:
-	pdflatex $(TARGET).tex
-	pdflatex $(TARGET).tex
+	$(MAKE) -C tex report
 
 clean:
-	rm -f *.pdf *-blx.bib *.aux *.bbl *.blg *.out *.run.xml *.log
+	$(MAKE) -C tex clean
