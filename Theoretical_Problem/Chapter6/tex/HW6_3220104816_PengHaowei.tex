@@ -1,0 +1,430 @@
+\documentclass[a4paper]{article}
+\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\hypersetup{
+    colorlinks=true,    % 彩色链接
+    linkcolor=blue,     % 内部链接的颜色
+    citecolor=red,      % 引用的颜色
+    urlcolor=cyan       % 外部链接的颜色
+}
+\usepackage{geometry}
+\usepackage[lined, ruled]{algorithm2e}
+\usepackage{listings}
+\lstset{
+    basicstyle = \ttfamily,
+    keywordstyle = \color{blue},
+    commentstyle = \color{green!50!black}\itshape,
+    stringstyle = \color{orange},
+    numbers = left,
+    numberstyle = \scriptsize,
+    numbersep = 5pt,
+    breaklines = true,
+}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+\titleformat{\section}{\Large\bfseries}{\Roman{section}}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\Roman{section}.\alph{subsection}}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\Roman{section}.\alph{subsection}.\roman{subsubsection}}{1em}{}
+
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{equation}{Equation}{Equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+
+\crefalias{algocf}{algorithm}
+
+\renewcommand\arraystretch{1.2}
+
+%\addbibresource{citation.bib}
+
+\begin{document}
+% =================================================
+\title{\textbf{Numerical Analysis theoretical homework \# 6 }}
+
+\author{Peng Haowei 3220104816
+  \thanks{E-mail address: \texttt{3220104816@zju.edu.cn}}}
+\affil{(Information and Computing Science), Zhejiang University} 
+
+\date{Due time: \today}
+
+\maketitle
+
+\section{Some problems about Simpson's rule}
+
+\subsection{Show the connection between Simpson's rule and the interpolation polynomial}
+
+The Simpson's rule on $[-1, 1]$ with $\rho = 1$ is given by
+\begin{equation}
+    \begin{aligned}
+        I^S(f) &= \frac{b - a}{6} \left[f(a) + 4f(\frac{a + b}{2}) + f(b)\right] \\
+        & = \frac{1}{3} [y(-1) + 4y(0) + y(1)].
+    \end{aligned}
+    \label{eq:1_simpson}
+\end{equation}
+
+For the interpolation of function $p_3(y; -1, 0, 0, 1; t)$, we have the table of divided difference as follows.
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{c|cccc}
+        -1 & $y(-1)$ &  &  &   \\
+        0 & $y(0)$ & $y(0) - y(-1)$ &  &  \\
+        0 & $y(0)$ & $y'(0)$ & $y'(0) - y(0) + y(-1)$ &  \\
+        1 & $y(1)$ & $y(1) - y(0)$ & $y(1) - y(0) - y'(0)$ & $\frac{y(1) - 2y'(0) - y(-1)}{2}$ \\ 
+    \end{tabular}
+    \caption{Divided difference table for $p_3(y; -1, 0, 0, 1; t)$}
+    \label{table:1_divided_difference}
+\end{table}
+
+Consequently, the interpolation polynomial is 
+\begin{equation}
+    \begin{aligned}
+        & p_3(y; -1, 0, 0, 1; t) \\
+        =&\ y(-1) + (y(0) - y(-1))(x + 1) + (y'(0) - y(0) + y(-1))x(x + 1) + \frac{y(1) - 2y'(0) - y(-1)}{2}x^2(x + 1), \\
+        =&\ \frac{y(1) - 2y'(0) - y(-1)}{2}x^3 + \frac{y(1) - 2y(0) + y(-1)}{2}x^2 + y'(0)x + y(0),
+    \end{aligned}
+    \label{eq:1_interpolation}
+\end{equation}
+which yields
+\begin{equation}
+    \begin{aligned}
+        & \int_{-1}^1 p_3(y; -1, 0, 0, 1; t)\ \mathrm{d} t  \\
+        =&\ \int_{-1}^1 \left[ \frac{y(1) - 2y'(0) - y(-1)}{2}x^3 + \frac{y(1) - 2y(0) + y(-1)}{2}x^2 + y'(0)x + y(0)\right]\ \mathrm{d}t \\
+        =&\ \frac{y(1) - 2y(0) + y(-1)}{3} + 2y(0) \\
+        =&\ \frac{1}{3} \left[ f(-1) + 4f(0) + f(1) \right], \\
+    \end{aligned}
+    \label{eq:1_integral}
+\end{equation}
+and it equals to \cref{eq:1_simpson}.
+
+\subsection{Derive $E^S(y)$}
+
+According to the error analysis of the Hermite interpolation, there exists some $\xi \in (-1, 1)$ such that
+\begin{equation}
+    y(t) - p_3(y; -1, 0, 0, 1; t) = \frac{y^{(4)}(\xi)}{4!}x^2(x + 1)(x - 1).
+    \label{eq:1_error}
+\end{equation}
+
+Then we have 
+\begin{equation}
+    \begin{aligned}     
+        E^S(f) &= \int_{-1}^1 \frac{y^{(4)}(\xi(x))}{24} x^2(x + 1)(x - 1)\ \mathrm{d}x \\
+        &= \frac{y^{(4)}(\zeta)}{24} \int_{-1}^1 x^2(x + 1)(x - 1)\ \mathrm{d}x \\
+        &= -\frac{y^{(4)}(\zeta)}{90}.
+    \end{aligned}
+    \label{eq:1_error_analysis}
+\end{equation}
+
+\subsection{Derive the composite Simpson's rule and its error}
+
+From the definition of composite Simpson's rule with $\rho(x) \equiv 1$, we have
+\begin{equation}
+    I_n^S(f) = \frac{h}{3}[f(x_0) + 4f(x_1) + 2f(x_2) + 4f(x_3) + 2f(x_4) + \cdots + 4f(x_{n - 1}) + f(x_n)],
+    \label{eq:1_composite_simpson}
+\end{equation}
+where $h = \frac{b - a}{n},\ x_k = a + kh$, and $n$ is even.
+
+Denote $\varphi_i(x) = \frac{1}{h}(x - x_i) - 1,\ i = 0, 1, \cdots, \frac{n}{2} - 1$, then we have
+\begin{equation}
+    \begin{aligned}
+        \int_{x_{2i}}^{x_{2i + 2}} f(x) \mathrm{d} x &= \int_{-1}^1 f(\varphi_i(x))\ h\mathrm{d}\varphi_i \\
+        &= \frac{h}{3} \left[f(x_{2i}) + 4f(x_{2i + 1}) + f(x_{2i + 2})\right] + E_i^S(f), \\
+    \end{aligned}
+    \label{eq:1_composite_simpson_integral}
+\end{equation}
+
+which yields
+\begin{equation}
+    \begin{aligned}
+        I_n^S(f) &= \frac{h}{3} \sum_{i = 0}^{n / 2 - 1} \left[f(x_{2i}) + 4f(x_{2i + 1}) + f(x_{2i + 2})\right] \\
+        &= \frac{h}{3} \left[ f(x_0) + 4f(x_1) + 2f(x_2) + 4f(x_3) + 2f(x_4) + \cdots + 4f(x_{n - 1}) + f(x_n) \right].
+    \end{aligned}
+    \label{eq:1_composite_simpson_final}
+\end{equation}
+
+For the error estimation, we first have 
+\begin{equation}
+    E_i^S(f) = -\frac{(x_{2i + 2} -x_{2i})^5}{2880} f^{(4)}(\zeta_i) = -\frac{H^5}{2880} f^{(4)}(\zeta_i), \quad \zeta_i \in (x_{2i}, x_{2i + 2}),
+    \label{eq:1_composite_simpson_error}
+\end{equation}
+where $H = 2h$. Then it follows
+\begin{equation}
+    E_n^S(f) = -\frac{H^5}{2880} \sum_{i = 0}^{n/2 - 1}f^{(4)}(\zeta_i), 
+    \label{eq:1_composite_simpson_error_sum}
+\end{equation}
+and with the continuity of $f^{(4)}$, there exists some $\xi \in (a, b)$ such that
+\begin{equation}
+    \begin{aligned}
+        E_n^S(f) & = -\frac{H^5}{2880} \frac{n}{2} \frac{2}{n} \sum_{i = 0}^{n/2 - 1} f^{(4)}(\zeta_i) \\
+        & = -\frac{nhH^4}{2880} f^{(4)}(\xi) \\
+        & = -\frac{b - a}{180} h^4 f^{(4)}(\xi).       
+    \end{aligned}
+    \label{eq:1_composite_simpson_error_final}
+\end{equation}
+
+\section{Estimate the number of subintervals}
+
+In this section, we consider the integration
+\begin{equation}
+    \int_0^1 e^{-x^2} \mathrm{d} x,
+    \label{eq:2_integration}
+\end{equation}
+and the target absolute error is less than $0.5 \times 10^{-6}$.
+
+\subsection{Use the composite trapezoidal rule}
+\label{sec:2_composite_trapezoidal}
+
+With the weight function $\rho(x) \equiv 1$, the remainder of the trapezoidal rule satisfies
+\begin{equation}
+    \exists \zeta \in (a, b) \quad \mathrm{s.t.}\ E^T(f) = -\frac{b - a}{12}h^2 f''(\zeta).
+    \label{eq:2_trapezoidal_error}
+\end{equation}
+
+So it follows that 
+\begin{equation}
+    E^T(f) = -\frac{1}{12}h^2 (4\zeta^2 e^{-\zeta^2} - 2e^{-\zeta^2}),
+    \label{eq:2_trapezoidal_error_final}
+\end{equation}
+
+Assuming $\varphi(\zeta) = (4\zeta^2 e^{-\zeta^2} - 2e^{-\zeta^2})$, then we have
+\begin{equation}
+    \varphi'(\zeta) = (8\zeta - 8\zeta^3 + 4\zeta)e^{-\zeta^2} = 4\zeta(3 - 2\zeta^2)e^{-\zeta^2} \geqslant 0, \quad \forall \zeta \in [0, 1]
+    \label{eq:2_trapezoidal_derivative}
+\end{equation}
+which implies 
+\begin{equation}
+    \max_{\zeta \in [0, 1]} |\varphi(\zeta)| = \max\{|\varphi(0)|, |\varphi(1)|\} = 2.
+    \label{eq:2_trapezoidal_max}
+\end{equation}
+
+Therefore, we have
+\begin{equation}
+    \begin{aligned}
+        & \frac{1}{12}h^2 \times 2 < 0.5 \times 10^{-6}, \\
+        \Rightarrow &\ h < \sqrt{3} \times 10^{-3} \approx 1.7321 \times 10^{-3}.
+    \end{aligned}
+    \label{eq:2_trapezoidal_error_final_approx}
+\end{equation}
+It means that we require at least 578 subintervals to achieve the target absolute error.
+
+\subsection{Use Simpson's rule}
+
+The remainder of Simpson's rule satisfies
+\begin{equation}
+    \exists \zeta \in (a, b)\quad \mathrm{s.t.}\ E^S(f) = -\frac{b - a}{180}h^4f^{(4)}(\zeta).
+    \label{eq:2_simpson_error}
+\end{equation}
+
+So it follows that 
+\begin{equation}
+    E^S(f) = -\frac{1}{180} h^4 \times 4e^{-\zeta^2}(4\zeta^4 - 12\zeta^2 + 3).
+    \label{eq:2_simpson_error_final}
+\end{equation}
+
+We can get the following equation with similar steps as \cref{sec:2_composite_trapezoidal}:
+\begin{equation}
+    \begin{aligned}
+        & \frac{1}{180}h^4 \times 12 < 0.5 \times 10^{-6}, \\
+        \Rightarrow &\ h < \sqrt[4]{7.5 \times 10^{-6}} \approx 0.05233. 
+    \end{aligned}
+    \label{eq:2_simpson_error_final_approx}
+\end{equation}
+
+It means that we require at least 20 subintervals to achieve the target absolute error. 
+
+\section{Problems about Gauss-Laguerre quadrature formula}
+
+\subsection{Construct a quadratic polynomial orthogonal to $\mathbb{P}_1$}
+\label{sec:3_1}
+
+Denote $\pi_2(t) = t^2 + at + b$, and we need to find $a, b$ such that
+\begin{equation}
+    \forall p \in \mathbb{P}_1, \quad \int_0^{+\infty} p(t) \pi_2(t) \rho(t)\ \mathrm{d}t = 0,
+    \label{eq:3_orthogonal}
+\end{equation}
+where $\rho(t) = e^{-t}$ is the weight function.
+
+As $p(t)$ is chosen arbitrarily, we can assume $p(t) = mt + n$, then we have
+\begin{equation}
+    \begin{aligned}
+        \int_0^{+\infty} (mt + n)(t^2 + at + b) e^{-t}\ \mathrm{d}t &= \int_0^{+\infty} [mt^3 + (n + am)t^2 + (na + mb)t + nb]e^{-t} \ \mathrm{d}t \\
+        &= 6m + 2(n + am) + na + mb + nb \\
+        &= (6 + 2a + b)m + (2 + a + b)n,
+    \end{aligned}
+    \label{eq:3_orthogonal_int} 
+\end{equation}
+where we use the equation
+\begin{equation}
+    \int_0^{+\infty} t^m e^{-t}\ \mathrm{d}t = m!.
+    \label{eq:3_orthogonal_int_m}
+\end{equation}
+
+So it follows 
+\begin{equation}
+    \begin{cases}
+    6 + 2a + b = 0, \\
+    2 + a + b = 0,
+    \end{cases}
+    \Rightarrow 
+    \begin{cases}
+        a = -4, \\
+        b = 2,
+    \end{cases}
+    \label{eq:3_orthogonal_solution}
+\end{equation}
+which implies that 
+\begin{equation}
+    \pi_2(t) = t^2 - 4t + 2.
+    \label{eq:3_orthogonal_polynomial}
+\end{equation}
+
+\subsection{Derive the two-point Gauss-Laguerre quadrature formula}
+
+The roots of \cref{eq:3_orthogonal_polynomial} are 
+\begin{equation}
+    t_1 = 2 - \sqrt{2}, \quad t_2 = 2 + \sqrt{2}.
+    \label{eq:3_roots}
+\end{equation}
+
+According to the formula 
+\begin{equation}
+    w_k = \int_0^{+\infty} \frac{\pi_2(t)}{(t - t_k)\pi'_2(t_k)}\rho(t)\ \mathrm{d}t = \frac{(2!)^2}{t_k[\pi'_2(t_k)]^2}, \quad k = 1,2,
+    \label{eq:3_integral_formula}
+\end{equation}
+we have 
+\begin{equation}
+    w_1 = \frac{2 + \sqrt{2}}{4}, \quad w_2 = \frac{2 - \sqrt{2}}{4}.
+    \label{eq:3_integral_formula_values}
+\end{equation}
+
+To express $E_2(f)$, we apply the theorem
+\begin{equation}
+    R_{(f, G_n)} = \int_a^b f(x) \rho(x)\ \mathrm{d}x - \sum_{k = 1}^n A_k f(x_k) = \frac{f^{(2n)}(\xi)}{(2n)!} \int_a^b w^2(x)\rho(x)\ \mathrm{d}x,
+    \label{eq:3_theorem}
+\end{equation}
+and it yields
+\begin{equation}
+    E_2(f) = \frac{f^{(4)}(\tau)}{24} \int_0^{+\infty} \pi_2^2(t) \rho(t)\ \mathrm{d}t = \frac{f^{(4)}(\tau)}{6}.
+    \label{eq:3_theorem_final}
+\end{equation}
+
+Therefore, the two-point Gauss-Laguerre quadrature formula is
+\begin{equation}
+    \int_0^{+\infty} f(t)e^{-t}\ \mathrm{d}t = \frac{2 + \sqrt{2}}{4} f(2 - \sqrt{2}) + \frac{2 - \sqrt{2}}{4} f(2 + \sqrt{2}) + \frac{f^{(4)}(\tau)}{6}.
+    \label{eq:3_final_formula}
+\end{equation}
+
+\subsection{Use the formula to estimate an integration}
+
+In this section, we consider the integration
+\begin{equation}
+    I = \int_0^{+\infty} \frac{1}{1 + t}e^{-t}\ \mathrm{d}t.
+    \label{eq:3_integration}
+\end{equation}
+
+According to the \cref{eq:3_final_formula}, we have
+\begin{equation}
+    \begin{aligned}
+        I &= \int_0^{+\infty} \frac{1}{1 + t} e^{-t} \ \mathrm{d}t \\
+        &\ \approx \frac{2 + \sqrt{2}}{4} \times \frac{1}{1 + 2 - \sqrt{2}} + \frac{2 - \sqrt{2}}{4} \times \frac{1}{1 + 2 + \sqrt{2}} \\
+        &\ = \frac{4}{7},
+    \end{aligned}
+    \label{eq:3_integration_approx}
+\end{equation}
+and the true error is
+\begin{equation}
+    E_2^{(T)}(f) = |I - \frac{4}{7}| \approx 0.0249187896.
+    \label{eq:3_integration_error}
+\end{equation}
+
+As $f^{(4)}(\tau) = -\frac{6}{(1 + \tau)^4}$, we have 
+\begin{equation}
+    \begin{aligned}
+        & |E_2^{(E)}(f)| = |\frac{f^{(4)}(\tau)}{6}| = \frac{1}{(1 + \tau)^4}, \\
+        & \Rightarrow \tau \approx 1.516913.
+    \end{aligned}
+    \label{eq:3_integration_error_final}
+\end{equation}
+
+\section{Remainder of Gauss formulas}
+
+In this part, we first consider the elementary Hermite interpolation polynomials. We are given the values and the derivative values of each knots, so we can get the Hermite interpolation polynomial $p \in \mathbb{P}_{2n - 1}$. 
+The solution $p$ can be expressed as 
+\begin{equation}
+    p(t) = \sum_{m = 1}^n [h_m(t)f_m + q_m(t)f'_m],
+    \label{eq:4_hermite_interpolation}
+\end{equation}
+where $h_m(t), q_m(t)$ are the elementary Hermite interpolation polynomials.
+
+\subsection{Seek $h_m, q_m$ in the given form}
+
+We need to seek $h_m, q_m$ in the form
+\begin{equation}
+    h_m(t) = (a_m + b_mt) \ell^2_m(t), \quad q_m(t) = (c_m + d_mt) \ell^2_m(t),
+    \label{eq:4_hermite_interpolation_form}
+\end{equation}
+where $\ell_m(t) = \prod_{i \ne m,\ i = 0}^n \frac{x - x_i}{x_m - x_i}$ is the elementary Lagrange polynomial.
+Consequently it follows that
+\begin{equation}
+    \begin{aligned}
+        p(x_m) &= (a_m + b_m x_m)f_m + (c_m + d_m x_m)f'_m = f_m, \\
+        p'(x_m) &= [b_m + 2(a_m + b_m x_m)\sum_{i \ne m,\ i = 0}^n \frac{1}{x_m - x_i}]f_m + [d_m + 2(c_m + d_m x_m)\sum_{i \ne m,\ i = 0}^n \frac{1}{x_m - x_i}]f'_m = f'_m,
+    \end{aligned}
+    \label{eq:4_hermite_interpolation_form_values}
+\end{equation}
+which yields
+\begin{equation}
+    \begin{aligned}
+        a_m + b_m x_m &= 1, \\
+        c_m + d_m x_m &= 0, \\ 
+        b_m + 2(a_m + b_m x_m)\sum_{i \ne m,\ i = 1}^n \frac{1}{x_m - x_i} &= 0, \\
+        d_m + 2(c_m + d_m x_m)\sum_{i \ne m,\ i = 1}^n \frac{1}{x_m - x_i} &= 1.
+    \end{aligned}
+    \label{eq:4_hermite_interpolation_form_values_final}
+\end{equation}
+
+Solving \cref{eq:4_hermite_interpolation_form_values_final}, we get the resolution as 
+\begin{equation}
+    a_m = 1 + 2\sum_{i \ne m,\ i = 1}^n \frac{x_m}{x_m - x_i},\quad b_m = -2\sum_{i \ne m,\ i = 1}^n \frac{1}{x_m - x_i},\quad c_m = -x_m,\quad d_m = 1.
+    \label{eq:4_hermite_interpolation_form_values_final_solution}
+\end{equation}
+
+\subsection{Obtain the quadrature rule such that $E_n(p) = 0$ for all $p \in \mathbb{P}_{2n - 1}$}
+
+With \cref{eq:4_hermite_interpolation,eq:4_hermite_interpolation_form,eq:4_hermite_interpolation_form_values_final_solution}, we can get an interpolation polynomial $p \in \mathbb{P}_{2n - 1}$ of $f$.
+Therefore, if $f \in \mathbb{P}_{2n - 1}$, then $f - p \equiv 0$, which means that $E_n(f) = 0$. So the quadrature rule is 
+\begin{equation}
+    I_n(f) = \sum_{k = 1}^n \left[f(x_k) \int_a^b (a_k + b_kx)\ell^2_k(x)\ \mathrm{d}x + f'(x_k) \int_a^b (c_k + d_kx)\ell^2_k(x)\ \mathrm{d}x \right],
+    \label{eq:4_hermite_quadrature_rule}
+\end{equation}
+where $a_k, b_k, c_k, d_k$ are consistent with those in \cref{eq:4_hermite_interpolation_form_values_final_solution}.
+
+\subsection{Conditions such that $\mu_k = 0$}
+
+From the formula
+\begin{equation}
+    \mu_k = \int_a^b (x - x_k) \ell^2_k(x)\ \mathrm{d}x = \int_a^b (x - x_1)^2 \cdots (x - x_k) \cdots (x - x_n)^2 \prod_{i \ne k,\ i = 1}^n \frac{1}{x_k - x_i}\ \mathrm{d}x,
+    \label{eq:4_hermite_quadrature_rule_mu}
+\end{equation}
+we can get the following conditions.
+\begin{equation}
+    \int_a^b \frac{1}{x - x_k} \prod_{i = 1}^n (x - x_i)^2\ \mathrm{d}x = 0.
+    \label{eq:4_hermite_quadrature_rule_mu_condition}
+\end{equation}
+
+\section*{ \center{\normalsize {Acknowledgement}} }
+
+In the process of writing this report, I use \href{https://kimi.moonshot.cn/}{\textit{Kimi AI}} to help me translate something and write this report by \TeX.
+
+\end{document}
