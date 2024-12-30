@@ -1,3 +1,19 @@
+\documentclass[a4paper]{article}
+\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\hypersetup{
+    colorlinks=true,    % 彩色链接
+    linkcolor=blue,     % 内部链接的颜色
+    citecolor=red,      % 引用的颜色
+    urlcolor=cyan       % 外部链接的颜色
+}
+\usepackage{geometry}
 \usepackage[lined, ruled]{algorithm2e}
 \usepackage{listings}
 \lstset{
@@ -14,9 +30,9 @@
 \setlength{\topmargin}{-1cm}
 \setlength{\paperheight}{29.7cm}
 \setlength{\textheight}{25.3cm}
-\titleformat{\section}{\Large\bfseries}{\Roman{section}}{1em}{}
-\titleformat{\subsection}{\large\bfseries}{\Roman{section}.\alph{subsection}}{1em}{}
-\titleformat{\subsubsection}{\normalsize\bfseries}{\Roman{section}.\alph{subsection}.\roman{subsubsection}}{1em}{}
+%\titleformat{\section}{\Large\bfseries}{\Roman{section}}{1em}{}
+%\titleformat{\subsection}{\large\bfseries}{\Roman{section}.\alph{subsection}}{1em}{}
+%\titleformat{\subsubsection}{\normalsize\bfseries}{\Roman{section}.\alph{subsection}.\arabic{subsubsection}}{1em}{}
 
 \crefname{algorithm}{Algorithm}{Algorithms}
 \Crefname{algorithm}{Algorithm}{Algorithms}
@@ -28,6 +44,11 @@
 \Crefname{table}{Table}{Tables}
 
 \crefalias{algocf}{algorithm}
+
+\theoremstyle{definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
 
 \renewcommand\arraystretch{1.2}
 
@@ -63,6 +84,289 @@ In this project, the file structure is shown as follows:
   \item \verb|Makefile| -- the makefile used to compile, run the project and generate the documents.
 \end{itemize}
 
+\section{The mathematical foundation of the project}
 
+\subsection{Introduction to Splines}
+
+Splines are a special kind of mathematical functions that can be used to approximate a smooth curve or a function, with each segment between two points being a polynomial and the entire curve is continuous, which is a type of interpolation polynomials. 
+
+\begin{definition}
+  Given nonnegative integers $n, k$, and a strictly increasing sequence $(x_i)_{i = 1}^N$ that partitions the interval $[a, b]$, 
+  \begin{equation}
+    a = x_1 < x_2 < \cdots < x_N = b,
+    \label{eq:partition}
+  \end{equation}
+  the set of \textit{spline functions of degree $n$ and smoothness class $k$} relative to the partitioned interval is 
+  \begin{equation}
+    \mathbb{S}_n^k = \{s: s \in \mathcal{C}^k[a, b];\ \forall i \in [1, N - 1],\ s\big|_{[x_i, x_{i + 1}]} \in \mathbb{P}_n\}.
+    \label{eq:spline-set}
+  \end{equation}
+  The $x_i$'s are called \textit{knots} of the spline.
+\end{definition}
+
+The most commonly used spline functions are the cubic splines, i.e. $\mathbb{S}_3^2$.
+
+\subsection{Boundary conditions of cubic splines}
+
+We consider three kinds of boundary conditions:
+\begin{itemize}
+  \item A \textit{complete cubic spline} $s \in \mathbb{S}_3^2$ satisfies boundary conditions $s'(f; a) = f'(a)$ and $s'(f; b) = f'(b)$.
+  \item A \textit{natural cubic spline} $s \in \mathbb{S}_3^2$ satisfies boundary conditions $s''(f; a) = 0$ and $s''(f; b) = 0$.
+  \item A \textit{periodic cubic spline} $s \in \mathbb{S}_3^2$ is obtained from replacing $s(f; b) = f(b)$ with $s(f; b) = s(f; a),\ s'(f; b) = s'(f; a)$ and $s''(f; b) = s''(f; a)$.
+\end{itemize}
+
+\subsection{PP-form Splines}
+\label{sec:pp-form-splines}
+
+\begin{lemma}
+  Denote $m_i = s'(f; x_i)$ for $s \in \mathbb{S}_3^2$. Then, for each $i = 2, 3, \cdots, N - 1$, we have 
+  \begin{equation}
+    \lambda_i m_{i - 1} + 2m_i + \mu_i m_{i + 1} = 3\mu_i f[x_i, x_{i + 1}] + 3\lambda_i f[x_{i - 1}, x_i],
+    \label{eq:pp-form-spline-tridiagonal}
+  \end{equation}
+  where 
+  \begin{equation}
+    \mu_i = \frac{x_i - x_{i - 1}}{x_{i + 1} - x_{i - 1}}, \quad \lambda_i = \frac{x_{i + 1} - x_i}{x_{i + 1} - x_{i - 1}}.
+    \label{eq:pp-form-spline-coefficients}
+  \end{equation}
+\end{lemma}
+
+According to the above lemma, we can construct the cubic splines in $\mathbb{S}_3^2$ by solving the linear system of equations with the coefficient matrix is tridiagonal. 
+More specifically, the polynomials $p_i$ are given by 
+\begin{equation}
+  p_i(x) = f_i + (x - x_i)m_i + \frac{3K_i - 2m_i - m_{i + 1}}{x_{i + 1} - x_i} (x - x_i)^2 + \frac{m_i + m_{i + 1} - 2K_i}{(x_{i + 1} - x_i)^2} (x - x_i)^3,
+  \label{eq:pp-form-spline-polynomial}
+\end{equation}
+where $K_i = f[x_i, x_{i + 1}]$.
+
+The second derivative is given by 
+\begin{equation}
+  p''_{i}(x) = 2\frac{3K_i - 2m_i - m_{i + 1}}{x_{i + 1} - x_i} + 6\frac{m_i + m_{i + 1} - 2K_i}{(x_{i + 1} - x_i)^2}(x - x_i).
+  \label{eq:pp-form-spline-second-derivative}
+\end{equation}
+
+So the different boundary conditions can be transferred into different linear systems, which are illustrated in the following sections.
+
+\subsubsection{Complete cubic spline}
+
+The complete cubic spline can be expressed as
+\begin{equation}
+  \begin{bmatrix}
+    1 &  &  &  &  &  &  &  & \\
+    \lambda_2 & 2 & \mu_2 &  &  &  &  &  & \\
+    & \lambda_3 & 2 & \mu_3 &  &  &  &  & \\
+    &   &   & \ddots &  &  &  &  & \\
+    &   &   & \lambda_i & 2 & \mu_i &  &  & \\
+    &   &   &   &   & \ddots &  &  & \\
+    &   &   &   &   & \lambda_{N - 2} & 2 & \mu_{N - 2} & \\
+    &   &   &   &   &   & \lambda_{N - 1} & 2 & \mu_{N - 1} \\
+    &   &   &   &   &   &   &   & 1 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    m_1 \\ m_2 \\ m_3 \\ \vdots \\ m_i \\ \vdots \\ m_{N - 2} \\ m_{N - 1} \\ m_N
+  \end{bmatrix}
+  = \begin{bmatrix}
+    f'(a) \\
+    3\mu_2 K_2 + 3\lambda_2 K_1 \\
+    3\mu_3 K_3 + 3\lambda_3 K_2 \\
+    \vdots \\
+    3\mu_i K_i + 3\lambda_i K_{i - 1} \\
+    \vdots \\
+    3\mu_{N - 2} K_{N - 2} + 3\lambda_{N - 2} K_{N - 3} \\
+    3\mu_{N - 1} K_{N - 1} + 3\lambda_{N - 1} K_{N - 2} \\
+    f'(b)
+    \end{bmatrix}.
+  \label{eq:pp-form-spline-linear-system-complete}
+\end{equation}
+
+\subsubsection{Natural cubic spline}
+
+And the natural cubic spline can be expressed as
+\begin{equation}
+  \begin{bmatrix}
+    1 &  &  &  &  &  &  &  & \\
+    \lambda_2 & 2 & \mu_2 &  &  &  &  &  & \\
+    & \lambda_3 & 2 & \mu_3 &  &  &  &  & \\
+    &   &   & \ddots &  &  &  &  & \\
+    &   &   & \lambda_i & 2 & \mu_i &  &  & \\
+    &   &   &   &   & \ddots &  &  & \\
+    &   &   &   &   & \lambda_{N - 2} & 2 & \mu_{N - 2} & \\
+    &   &   &   &   &   & \lambda_{N - 1} & 2 & \mu_{N - 1} \\
+    &   &   &   &   &   &   &   & 1 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    m_1 \\ m_2 \\ m_3 \\ \vdots \\ m_i \\ \vdots \\ m_{N - 2} \\ m_{N - 1} \\ m_N
+  \end{bmatrix}
+  = \begin{bmatrix}
+    0 \\
+    3\mu_2 K_2 + 3\lambda_2 K_1 \\
+    3\mu_3 K_3 + 3\lambda_3 K_2 \\
+    \vdots \\
+    3\mu_i K_i + 3\lambda_i K_{i - 1} \\
+    \vdots \\
+    3\mu_{N - 2} K_{N - 2} + 3\lambda_{N - 2} K_{N - 3} \\
+    3\mu_{N - 1} K_{N - 1} + 3\lambda_{N - 1} K_{N - 2} \\
+    0
+    \end{bmatrix}.
+  \label{eq:pp-form-spline-linear-system-natural}
+\end{equation}
+
+\subsubsection{Periodic cubic spline}
+
+As for the periodic cubic spline, we have $s(f; b) = s(f; a)$, $s'(f; b) = s'(f; a)$ and $s''(f; b) = s''(f; a)$, so we can translate $S_3(x)$ in $[x_1, x_2]$ to $[x_N, x_N + x_2 - x_1]$ to satisfy the conditions. Therefore, we have the following linear system.
+\begin{equation}
+  \begin{bmatrix}
+    1 &  &  &  &  &  &  &  & -1 \\
+    \lambda_2 & 2 & \mu_2 &  &  &  &  &  & \\
+    & \lambda_3 & 2 & \mu_3 &  &  &  &  & \\
+    &   &   & \ddots &  &  &  &  & \\
+    &   &   & \lambda_i & 2 & \mu_i &  &  & \\
+    &   &   &   &   & \ddots &  &  & \\
+    &   &   &   &   & \lambda_{N - 2} & 2 & \mu_{N - 2} & \\
+    &   &   &   &   &   & \lambda_{N - 1} & 2 & \mu_{N - 1} \\
+    \mu_N &   &   &   &   &   &   & \lambda_N & 2 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    m_1 \\ m_2 \\ m_3 \\ \vdots \\ m_i \\ \vdots \\ m_{N - 2} \\ m_{N - 1} \\ m_N
+  \end{bmatrix}
+  = \begin{bmatrix}
+    0 \\
+    3\mu_2 K_2 + 3\lambda_2 K_1 \\
+    3\mu_3 K_3 + 3\lambda_3 K_2 \\
+    \vdots \\
+    3\mu_i K_i + 3\lambda_i K_{i - 1} \\
+    \vdots \\
+    3\mu_{N - 2} K_{N - 2} + 3\lambda_{N - 2} K_{N - 3} \\
+    3\mu_{N - 1} K_{N - 1} + 3\lambda_{N - 1} K_{N - 2} \\
+    3\mu_N K_1 + 3\lambda_N \frac{f(x_1) - f(x_{N - 1})}{x_N - x_{N - 1}}
+    \end{bmatrix}
+  \label{eq:pp-form-spline-linear-system-periodic}
+\end{equation}
+where 
+\begin{equation}
+    \mu_N = \frac{x_N - x_{N - 1}}{x_N - x_{N - 1} + x_2 - x_1},\quad \lambda_N = \frac{x_2 - x_1}{x_N - x_{N - 1} + x_2 - x_1}.
+  \label{eq:pp-form-spline-linear-system-periodic-b}
+\end{equation}
+
+\subsection{B-form splines}
+
+The B-splines are a special case of the PP-splines. From \cref{sec:pp-form-splines} we can know that we need to solve a linear system again when we change only one value of $f_i$. B-splines overcome this problem by using a series of truncated power basis functions.
+
+\begin{definition}
+  \textit{B-splines} are defined recursively by 
+  \begin{equation}
+    B_i^{n + 1}(x) = \frac{x - t_{i- 1}}{t_{i + n} - t_{i - 1}}B_i^n(x) + \frac{t_{i + n + 1} - x}{t_{i + n + 1} - t_i}B_{i + 1}^n(x).
+    \label{eq:b-spline-recursive}
+  \end{equation}
+  The recursion base is the B-spline of degree zero,
+  \begin{equation}
+    B_1^0(x) = \begin{cases}
+      1 & \text{if}\ x \in (t_{i - 1}, t_i], \\
+      0 & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+\end{definition}
+
+And we have a theorem about the derivatives of B-splines.
+\begin{theorem}
+  For $n \geqslant 2$, we have 
+  \begin{equation}
+    \frac{\mathrm{d}}{\mathrm{d}x}B_i^n(x) = \frac{nB_i^{n - 1}(x)}{t_{i + n + 1} - t_{i - 1}} - \frac{nB_{i + 1}^{n - 1}(x)}{t_{i + n} - t_i}, \quad \forall x \in \mathbb{R}.
+    \label{eq:b-spline-derivative}
+  \end{equation}
+\end{theorem}
+
+Therefore, for the cubic B-splines, we need to calculate three parts of function at each knot as 
+\begin{equation}
+  f(t_i) = a_{i - 2}B_{i - 2}^3(t_i) + a_{i - 1}B_{i - 1}^3(t_i) + a_iB_i^3(t_i),
+  \label{eq:cubic-b-spline-function}
+\end{equation}
+from which we can see that we need to add additional knots $t_{-1}, t_0, t_{N + 1}, t_{N + 2}$. Without loss of generality, we will assume 
+\begin{equation}
+  \begin{aligned}
+    t_{-1} = t_1 - 2h_1,\quad & t_0 = t_1 - h_1, \\
+    t_{N + 1} = t_N + h_2,\quad & t_{N + 2} = t_N + 2h_2,
+  \end{aligned}
+  \label{eq:cubic-b-spline-knots}
+\end{equation}
+where $h_1 = t_2 - t_1,\ h_2 = t_N - t_{N - 1}$, in \cref{sec:complete-cubic-b-splines,sec:natural-cubic-b-splines}.
+
+\subsubsection{Complete cubic B-splines}
+\label{sec:complete-cubic-b-splines}
+
+Assuming the cubic B-spline is 
+\begin{equation}
+  S(x) = \sum_{i = -1}^N a_i B_i^3(x),
+  \label{eq:complete-cubic-b-spline}
+\end{equation}
+where $a_i$ are the coefficients and 
+\begin{equation}
+  a_{-1} = \frac{3t_2 - 3t_1}{t_3 + t_2 - 2t_1} a_1 - 2(t_2 - t_1)f'(t_1),\quad a_N = \frac{3(t_N - t_{N - 1})}{2t_N - t_{N - 1} - t_{N - 2}} + 2(t_N - t_{N - 1})f'(t_N),
+  \label{eq:complete-cubic-b-spline-coefficients}
+\end{equation}
+we can write the linear system for the coefficients $M\mathbf{a} = \mathbf{b}$ with
+\begin{equation}
+  \begin{aligned}
+    \mathbf{b}^T &= [f(t_1) + \frac{(t_2 - t_1)f'(t_1)}{3}, f(t_2), \cdots, f(t_{N - 1}), f(t_N) - \frac{t_N - t_{N - 1}f'(t_N)}{3}], \\
+    M &= \begin{bmatrix}
+      \frac{1}{3} + \frac{t_3 - t_1}{2(t_3 + t_2 - 2t_1)} & \frac{t_2 - t_1}{t_3 + t_2 - 2t_1} &    &    &    \\
+      B_0^3(t_2) & B_1^3(t_2) & B_2^3(t_2) &    &    \\
+        & \ddots & \ddots & \ddots &    \\
+        &    & B_{N - 3}^3(t_{N - 1}) & B_{N - 2}^3(t_{N - 1}) & B_{N - 1}^3(t_{N - 1}) \\
+        &    &    & \frac{t_N - t_{N - 1}}{2t_N - t_{N - 1} - t_{N - 2}} & \frac{1}{3} + \frac{t_N - t_{N - 2}}{2(2t_N - t_{N - 1} - t_{N - 2})}
+    \end{bmatrix},
+  \end{aligned}
+  \label{eq:complete-cubic-b-spline-linear-system}
+\end{equation}
+and $\mathbf{a}^T = [a_0, a_1, \cdots, a_{N - 1}]$ is the solution of the linear system.
+
+\subsubsection{Natural cubic B-splines}
+\label{sec:natural-cubic-b-splines}
+
+For the natural cubic B-splines, we have $S''(t_1) = 0, S''(t_N) = 0$. With the same formula in \cref{eq:complete-cubic-b-spline}, it follows 
+\begin{equation}
+  a_{-1} = -\frac{3(t_2 - t_1)}{t_3 + t_2 - 2t_1} a_1,\quad a_N = -\frac{3(t_N - t_{N - 1})}{2t_N - t_{N - 1} - t_{N - 2}},
+  \label{eq:natural-cubic-b-spline-coefficients}
+\end{equation}
+and the linear system $M\mathbf{a} = b$ with $\mathbf{a}^T = [a_0, a_1, \cdots, a_{N - 1}]$ is 
+\begin{equation}
+  \begin{aligned}
+    \mathbf{b}^T &= [f(t_1), f(t_2), \cdots, f(t_{N - 1}), f(t_N)], \\
+    M &= \begin{bmatrix}
+      \frac{1}{3} + \frac{t_3 - t_1}{2(t_3 + t_2 - 2t_1)} &    &    &    &    \\
+      B_0^3(t_2) & B_1^3(t_2) & B_2^3(t_2) &    &    \\
+        & \ddots & \ddots & \ddots &    \\
+        &    & B_{N - 3}^3(t_{N - 1}) & B_{N - 2}^3(t_{N - 1}) & B_{N - 1}^3(t_{N - 1}) \\
+        &    &    &    & \frac{1}{3} + \frac{t_N - t_{N - 2}}{2(2t_N - t_{N - 1} - t_{N - 2})}
+    \end{bmatrix}.
+  \end{aligned}
+  \label{eq:natural-cubic-b-spline-linear-system}
+\end{equation}
+
+\subsubsection{Periodic cubic B-splines}
+
+In this section, we consider the periodic cubic B-splines. So we transfer \cref{eq:cubic-b-spline-knots} into 
+\begin{equation}
+  \begin{aligned}
+    t_{-1} = t_1 + t_{N - 2} - t_N,\quad & t_0 = t_1 + t_{N - 1} - t_N, \\
+    t_{N + 1} = t_N + t_2 - t_1,\quad & t_{N + 2} = t_N + t_3 - t_1.
+  \end{aligned}
+  \label{eq:periodic-cubic-b-spline-knots}
+\end{equation}
+
+We have the linear system $M\mathbf{a} = \mathbf{b}$ with $\mathbf{a}^T = [a_0, a_1, \cdots, a_{N - 1}]$ and
+\begin{equation}
+  \begin{aligned}
+    \mathbf{b}^T &= [f(t_1), f(t_2), \cdots, f(t_{N - 1}), f(t_N)], \\
+    M &= \begin{bmatrix}
+      B_0^3(t_1) & B_1^3(t_1) &  \cdots  &  B_{-1}^3(t_1) &  \\
+      B_0^3(t_2) & B_1^3(t_2) & B_2^3(t_2) &    &    \\
+        &  \ddots &  \ddots & \ddots &    \\
+        &    & B_{N - 3}^3(t_{N - 1}) & B_{N - 2}^3(t_{N - 1}) & B_{N - 1}^3(t_{N - 1}) \\
+        & B_N^3(t_N) & \cdots &  B_{N - 2}^3(t_N) & B_{N - 1}^3(t_N) \\
+    \end{bmatrix}.
+  \end{aligned}
+  \label{eq:periodic-cubic-b-spline-linear-system}
+\end{equation}
 
 \end{document}

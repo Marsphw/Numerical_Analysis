@@ -26,6 +26,18 @@ public:
         Spline result(N, knots, S);
         return result; 
     }
+
+    Spline complete_cubic_ppform() {
+        ;
+    }
+
+    Spline natural_cubic_ppform() {
+        ;
+    }
+
+    Spline periodic_cubic_ppform() {
+        ;
+    }
     
 private:
     int n, k, N; //S_n^k spline
