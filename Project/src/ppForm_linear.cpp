@@ -10,6 +10,7 @@ int main() {
         scanf("%lf %lf", &knots[i].first, &knots[i].second);
     PPForm form(1, 0, N, knots);
     Spline sp = form.linear_splines();
+    printf("1\n");
     printf("Linear ppForm\n");
     sp.generate_data();
     return 0;

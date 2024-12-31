@@ -5,7 +5,6 @@
 #include <vector>
 #include <cmath>
 #include <cstdio>
-#include "Matrix.h"
 
 class Polynomial {
 

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Spline.h"
 #include "Polynomial.h"
-#include "Equation_Solving.h"
+#include "Solving_Equation.h"
 
 class Bspline {
 
