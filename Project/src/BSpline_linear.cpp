@@ -9,8 +9,10 @@ int main() {
     for (int i = 0; i < N; i++) 
         scanf("%lf %lf", &knots[i].first, &knots[i].second);
     Bspline form(1, N, knots);
-    Spline sp = form.natural_cubic_Bspline();
+    Spline sp = form.linear_Bspline();
+    printf("1\n");
     printf("Linear B-spline:\n");
     sp.generate_data();
+    //sp.show_polynomials();
     return 0;
 }

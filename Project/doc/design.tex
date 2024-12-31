@@ -289,7 +289,7 @@ According to definition and theorems above, we can see that we need to add addit
 \begin{equation}
   \begin{aligned}
     t_{1 - i} = t_1 - ih_1,& \quad \forall i \in \mathbb{N}, \\
-    t_{N + i} = t_N + ih_2,& \quad \forall i \in \mathbb{N}.
+    t_{N + i} = t_N + ih_2,& \quad \forall i \in \mathbb{N},
   \end{aligned}
   \label{eq:cubic-b-spline-knots}
 \end{equation}
@@ -305,6 +305,29 @@ And we have a theorem about the derivatives of B-splines yielded by \cref{eq:b-s
   \end{equation}
 \end{theorem}
 
+\subsubsection{Linear B-splines}
+
+The linear B-splines are obtained by setting $n = 1$, i.e. $\mathbb{S}_1^0$. The basis functions are 
+\begin{equation}
+  B_i^1(x) = \begin{cases}
+    \frac{x - t_{i - 1}}{t_i - t_{i - 1}} & x \in (t_{i - 1}, t_i], \\
+    \frac{t_{i + 1} - x}{t_{i + 1} - t_i} & x \in (t_i, t_{i + i}], \\
+    0 & \text{otherwise}.
+  \end{cases}
+  \label{eq:linear-b-spline}
+\end{equation}
+
+For $\mathbb{S}_1^0(t_1, t_2, \cdots, t_N)$, we assume 
+\begin{equation}
+  S(x) = \sum_{i = 0}^N a_i B_i^1(x),
+  \label{eq:linear-b-spline-form}
+\end{equation}
+then it follows that 
+\begin{equation}
+  a_i = f(t_i), \quad \forall i \in \mathbb{N}.
+  \label{eq:linear-b-spline-coefficients}
+\end{equation}
+
 \subsubsection{Complete cubic B-splines}
 \label{sec:complete-cubic-b-splines}
 
@@ -315,7 +338,7 @@ According to \cref{thm:b-spline-support}, we can assume the cubic B-spline is
 \end{equation}
 where $a_i$ are the coefficients and 
 \begin{equation}
-  a_{-1} = \frac{3t_2 - 3t_1}{t_3 + t_2 - 2t_1} a_1 - 2(t_2 - t_1)f'(t_1),\quad a_N = \frac{3(t_N - t_{N - 1})}{2t_N - t_{N - 1} - t_{N - 2}} + 2(t_N - t_{N - 1})f'(t_N),
+  a_{-1} = \frac{3a_1(t_2 - t_1)}{t_3 + t_2 - 2t_1} - 2(t_2 - t_1)f'(t_1),\quad a_N = \frac{3a_{N - 2}(t_N - t_{N - 1})}{2t_N - t_{N - 1} - t_{N - 2}} + 2(t_N - t_{N - 1})f'(t_N),
   \label{eq:complete-cubic-b-spline-coefficients}
 \end{equation}
 we can write the linear system for the coefficients $M\mathbf{a} = \mathbf{b}$ with
