@@ -85,9 +85,9 @@ In this project, the file structure is shown as follows:
   \item \verb|Makefile| -- the makefile used to compile, run the project and generate the documents.
 \end{itemize}
 
-\section{The mathematical foundation of the project}
+\section{Splines}
 
-\subsection{Introduction to Splines}
+\subsection{Introduction}
 
 Splines are a special kind of mathematical functions that can be used to approximate a smooth curve or a function, with each segment between two points being a polynomial and the entire curve is continuous, which is a type of interpolation polynomials. 
 
@@ -119,7 +119,7 @@ We consider three kinds of boundary conditions:
 \subsection{PP-form Splines}
 \label{sec:pp-form-splines}
 
-\begin{lemma}
+\begin{theorem}
   Denote $m_i = s'(f; x_i)$ for $s \in \mathbb{S}_3^2$. Then, for each $i = 2, 3, \cdots, N - 1$, we have 
   \begin{equation}
     \lambda_i m_{i - 1} + 2m_i + \mu_i m_{i + 1} = 3\mu_i f[x_i, x_{i + 1}] + 3\lambda_i f[x_{i - 1}, x_i],
@@ -130,7 +130,7 @@ We consider three kinds of boundary conditions:
     \mu_i = \frac{x_i - x_{i - 1}}{x_{i + 1} - x_{i - 1}}, \quad \lambda_i = \frac{x_{i + 1} - x_i}{x_{i + 1} - x_{i - 1}}.
     \label{eq:pp-form-spline-coefficients}
   \end{equation}
-\end{lemma}
+\end{theorem}
 
 According to the above lemma, we can construct the cubic splines in $\mathbb{S}_3^2$ by solving the linear system of equations with the coefficient matrix is tridiagonal. 
 More specifically, the polynomials $p_i$ are given by 
@@ -268,7 +268,35 @@ The B-splines are a special case of the PP-splines. From \cref{sec:pp-form-splin
   \end{equation}
 \end{definition}
 
-And we have a theorem about the derivatives of B-splines.
+\begin{theorem}
+  The following list of B-splines is a basis of $\mathbb{S}_n^{n - 1}(t_1, t_2, \cdots, t_N)$,
+  \begin{equation}
+    B_{2 - n}^n(x), B_{3 - n}^n(x), \cdots, B_{N}^n(x).
+    \label{eq:b-spline-basis}
+  \end{equation}
+\end{theorem}
+
+\begin{theorem}
+  (Support of B-splines). For $n \in \mathbb{N}^+$, the interval of support of $B_i^n$ is $[t_{i - 1}, t_{i + n}]$ where 
+  \begin{equation}
+    \forall x \in (t_{i - 1}, t_{i + n}),\ B_i^n(x) > 0.
+    \label{eq:b-spline-support}
+  \end{equation}
+  \label{thm:b-spline-support}
+\end{theorem}
+
+According to definition and theorems above, we can see that we need to add additional knots. Without loss of generality, we will assume 
+\begin{equation}
+  \begin{aligned}
+    t_{1 - i} = t_1 - ih_1,& \quad \forall i \in \mathbb{N}, \\
+    t_{N + i} = t_N + ih_2,& \quad \forall i \in \mathbb{N}.
+  \end{aligned}
+  \label{eq:cubic-b-spline-knots}
+\end{equation}
+where $h_1 = t_2 - t_1,\ h_2 = t_N - t_{N - 1}$, in \cref{sec:complete-cubic-b-splines,sec:natural-cubic-b-splines}.
+
+\vspace{1em}
+And we have a theorem about the derivatives of B-splines yielded by \cref{eq:b-spline-recursive}.
 \begin{theorem}
   For $n \geqslant 2$, we have 
   \begin{equation}
@@ -277,25 +305,10 @@ And we have a theorem about the derivatives of B-splines.
   \end{equation}
 \end{theorem}
 
-Therefore, for the cubic B-splines, we need to calculate three parts of function at each knot as 
-\begin{equation}
-  f(t_i) = a_{i - 2}B_{i - 2}^3(t_i) + a_{i - 1}B_{i - 1}^3(t_i) + a_iB_i^3(t_i),
-  \label{eq:cubic-b-spline-function}
-\end{equation}
-from which we can see that we need to add additional knots $t_{-1}, t_0, t_{N + 1}, t_{N + 2}$. Without loss of generality, we will assume 
-\begin{equation}
-  \begin{aligned}
-    t_{-1} = t_1 - 2h_1,\quad & t_0 = t_1 - h_1, \\
-    t_{N + 1} = t_N + h_2,\quad & t_{N + 2} = t_N + 2h_2,
-  \end{aligned}
-  \label{eq:cubic-b-spline-knots}
-\end{equation}
-where $h_1 = t_2 - t_1,\ h_2 = t_N - t_{N - 1}$, in \cref{sec:complete-cubic-b-splines,sec:natural-cubic-b-splines}.
-
 \subsubsection{Complete cubic B-splines}
 \label{sec:complete-cubic-b-splines}
 
-Assuming the cubic B-spline is 
+According to \cref{thm:b-spline-support}, we can assume the cubic B-spline is 
 \begin{equation}
   S(x) = \sum_{i = -1}^N a_i B_i^3(x),
   \label{eq:complete-cubic-b-spline}
@@ -370,7 +383,7 @@ We have the linear system $M\mathbf{a} = \mathbf{b}$ with $\mathbf{a}^T = [a_0, 
   \label{eq:periodic-cubic-b-spline-linear-system}
 \end{equation}
 
-\subsection{Method of solving linear systems}
+\section{Method of solving linear systems}
 
 In this section, we will discuss the method of solving linear systems. 
 
