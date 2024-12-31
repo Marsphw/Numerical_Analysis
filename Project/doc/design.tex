@@ -80,6 +80,7 @@ In this project, the file structure is shown as follows:
   \item \verb|src| -- the source code of the project, including the main program and the library files.
   \item \verb|doc| -- the documentation of the project, including the design document, the report of the project.
   \item \verb|figure| -- the figures used in the report.
+  \item \verb|data| -- the data used in the project, including the sample data and the test data.
   \item \verb|README.md| -- the README file of the project.
   \item \verb|Makefile| -- the makefile used to compile, run the project and generate the documents.
 \end{itemize}
@@ -368,5 +369,97 @@ We have the linear system $M\mathbf{a} = \mathbf{b}$ with $\mathbf{a}^T = [a_0, 
   \end{aligned}
   \label{eq:periodic-cubic-b-spline-linear-system}
 \end{equation}
+
+\subsection{Method of solving linear systems}
+
+In this section, we will discuss the method of solving linear systems. 
+
+Obviously, the coefficient matrixes mentioned in the previous sections are sparse, so we need to implement the direct method to solve the linear systems. 
+
+First we have the theorem 
+\begin{theorem}
+  Let $A$ be a nonsingular matrix. There exists a permutation matrix $P$, a lower triangular matrix $L$ with unit diagonal entries, and an upper triangular matrix $U$ such that 
+  \begin{equation}
+    PA = LU.
+    \label{eq:lu-decomposition}
+  \end{equation}
+\end{theorem}
+
+Once the LU decomposition $PA = LU$ is available, one can solve the linear system $Ax = b$ in the following way:
+\begin{enumerate}
+  \item Solve $Ly = Pb$ for $y$;
+  \item Solve $Ux = y$ for $x$.
+\end{enumerate}
+Here the cost of solving the $n \times n$ triangular systems is $O(n^2)$. 
+
+From the above analysis, we get the Gauss elimination with partial pivoting algorithm. The algorithm is as follows:
+\begin{algorithm}[H]
+  \For{$i = 1 : n - 1$}{
+    permute rows so that $|a_{ii}|$ is the largest in $|A(i : n, i)|$ \;
+    permute $L(i : n, 1 : i - 1)$ accordingly \;
+    \For{$j = i + 1 : n$}{
+      $l_{ji} \leftarrow a_{ji} / a_{ii}$ \;
+    }
+    \For{$j = i : n$}{
+      $u_{ij} \leftarrow a_{ij}$ \;
+    }
+    \For{$j = i + 1 : n$}{
+      \For{$k = i + 1 : n$}{
+        $a_{jk} \leftarrow a_{jk} - l_{jk} u_{ik}$ \;
+      }
+    }
+  }
+  \caption{Gauss elimination with partial pivoting algorithm}
+  \label{alg:gauss-elimination-with-partial-pivoting}
+\end{algorithm}
+
+From \cref{alg:gauss-elimination-with-partial-pivoting} we can see that the error of this algorithm will be influenced by the value of $a_{ii}$. For example, we consider the linear system $Ax = b$, where 
+\begin{equation}
+  A = \begin{pmatrix}
+    \epsilon & 1 \\
+    1 & 1
+  \end{pmatrix}, \quad b = \begin{pmatrix}
+    1 \\ 1
+  \end{pmatrix}, \quad 0 < \epsilon \ll 1.
+  \label{eq:linear-system-with-small-values}
+\end{equation}
+The exact solution is $x = [0, 1]^T$. Without machine round-off error, a standard Gaussian elimination implies 
+\begin{equation}
+  A = LU = \begin{pmatrix}
+    1 & 0 \\ 
+    -\frac{1}{\epsilon} & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    -\epsilon & 1 \\
+    0 & 1 + \frac{1}{\epsilon} 
+  \end{pmatrix}.
+  \label{eq:lu-decomposition-with-small-values}
+\end{equation}
+
+Considering the round-off process in the computer, we have 
+\begin{equation}
+  \hat{L} = \begin{pmatrix}
+    1 & 0 \\ 
+    -\frac{1}{\epsilon} & 1 
+  \end{pmatrix}, \quad 
+  \hat{U} = \begin{pmatrix}
+    -\epsilon & 1 \\
+    0 & \frac{1}{\epsilon} 
+  \end{pmatrix}
+  \label{eq:lu-decomposition-with-round-off}
+\end{equation}
+which yields that 
+\begin{equation}
+  \hat{A} = \begin{pmatrix}
+    -\epsilon & 1 \\ 
+    1 & 0
+  \end{pmatrix} \ne \begin{pmatrix}
+    \epsilon & 1 \\
+    1 & 1
+  \end{pmatrix}.
+  \label{eq:linear-system-with-small-values-with-round-off}
+\end{equation}
+
+With the pivoting, the error of the algorithm will be obviously less than the machine round-off error.
 
 \end{document}
