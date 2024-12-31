@@ -2,7 +2,6 @@
 #define BSPLINE_H
 
 #include <iostream>
-#include <utility>
 #include "Spline.h"
 #include "Polynomial.h"
 #include "Equation_Solving.h"
@@ -10,7 +9,7 @@
 class Bspline {
 
 public:
-    Bspline(int nn, int NN, std::vector<std::pair<double, double>> knots_in, double bc[]): n(nn), N(NN), knots(knots_in) {
+    Bspline(int nn, int NN, std::vector<std::pair<double, double>> knots_in, double bc[] = 0): n(nn), N(NN), knots(knots_in) {
         for (int i = 0; i < n - 1; i++) 
             boundary_conditions[i] = bc[i];
     }
@@ -21,7 +20,7 @@ public:
             basis_polynomials[i][ni] = std::vector<Polynomial>{Polynomial(0, coeffs)};
             return ;
         }
-        std::vector<Polynomial> result(ni + 1);
+        std::vector<Polynomial> result;
         if (i == 1 - n) 
             construct_basis_polynomials(i, ni - 1);
         construct_basis_polynomials(i + 1, ni - 1);
@@ -35,9 +34,11 @@ public:
         std::vector<double> coeff2{((i + ni + 1 >= N - 1) ? knots[N - 1].first + (i + ni + 1 - N + 1) * h2 : knots[i + ni + 1].first) / (knots[N - 1].first + (i + ni + 1 - N + 1) * h2 - knots[i].first)};
         Polynomial p2(1, coeff2);
 
+        std::vector<double> temp{0.0};
+        result.push_back(Polynomial(0, temp));
         for (int k = 0; k < ni; ++k) {
             result[k] = result[k] +  p1 * basis_polynomials[i][ni - 1][k];
-            result[k + 1] = result[k + 1] + p2 * basis_polynomials[i + 1][ni - 1][k];
+            result.push_back(p2 * basis_polynomials[i + 1][ni - 1][k]);
         }
 
         basis_polynomials[i][ni] = result;
@@ -75,10 +76,7 @@ public:
         for (int i = 0; i < N; ++i) {
             ;
         }
-        std::vector<double> knot_x(N);
-        for (int i = 0; i < N; ++i)
-            knot_x[i] = knots[i].first;
-        Spline spline(N, knot_x, polynomials);
+        Spline spline(N, knots, polynomials);
     }
 
     Spline natural_cubic_Bspline() {
