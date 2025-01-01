@@ -8,5 +8,4 @@ report:
 
 clean:
 	$(MAKE) -C doc clean
-	$(MAKE) -C figure clean
 	$(MAKE) -C src clean
