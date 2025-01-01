@@ -63,6 +63,63 @@ public:
         return Spline(N, knots, polynomials);
     }
 
+    Spline cardinal_quad_Bspline() {
+        double h1 = knots[1].first - knots[0].first;
+        double h2 = knots[N - 1].first - knots[N - 2].first;
+        for (int i = 1; i <= n; ++i) {
+            knots.insert(knots.begin(), std::make_pair(knots[0].first - h1, 0.0));
+            knots.push_back(std::make_pair(knots[N - 1 + i].first + i * h2, 0.0));
+        }
+        for (int i = 1; i <= N; ++i)
+            construct_basis_polynomials(i, n);
+
+        double coeff_matrix[N * N];
+        coeff_matrix[0] = 5;
+        coeff_matrix[N] = 1;
+        for (int i = 1; i < N - 1; ++i) {
+            coeff_matrix[i*N - N - i] = 1;
+            coeff_matrix[i*N + i] = 6;
+            coeff_matrix[i*N + N + i] = 1;
+        }
+        coeff_matrix[N*N - N - 1] = 1;
+        coeff_matrix[N*N - 1] = 5;
+
+        double rhs[N];
+        for (int i = 0; i < N; ++i)
+            rhs[i] = 8 * knots[i].second;
+        rhs[0] -= 2 * boundary_conditions[0];
+        rhs[N - 1] -= 2 * boundary_conditions[1];
+
+        EquationSolver linear_system(N, coeff_matrix, rhs);
+        double *solution = linear_system.solve();
+
+        std::vector<Polynomial> polynomials;
+        polynomials.push_back(Polynomial(0, {0.0}));
+        for (int i = 1; i <= N + 1; ++i) {
+            if (i == 1) {
+                double co = 2 * knots[2].first - solution[0];
+                Polynomial temp(0, {co});
+                polynomials.push_back(temp * basis_polynomials[i][n][0]);
+                polynomials.push_back(temp * basis_polynomials[i][n][1]);
+                continue;
+            }
+            if (i == N + 1) {
+                double co = 2 * knots[N + 1].first - solution[N - 2];
+                Polynomial temp(0, {co});
+                polynomials[N + 1] = polynomials[N + 1] + temp * basis_polynomials[i][n][0];
+                continue;
+            }
+            Polynomial temp(0, {solution[i - 2]});
+            polynomials[i] = polynomials[i] + temp * basis_polynomials[i][n][0];
+            polynomials.push_back(temp * basis_polynomials[i][n][1]); 
+        }
+        for (int i = 0; i <= n; ++i)
+            polynomials.erase(polynomials.begin());
+        for (int i = 0; i < n; ++i)
+            knots.erase(knots.begin());
+        return Spline(N, knots, polynomials);
+    }
+
     Spline complete_cubic_Bspline() {
         double h1 = knots[1].first - knots[0].first;
         double h2 = knots[N - 1].first - knots[N - 2].first;
@@ -70,6 +127,10 @@ public:
             knots.insert(knots.begin(), std::make_pair(knots[0].first - h1, 0.0));
             knots.push_back(std::make_pair(knots[N - 1 + i].first + i * h2, 0.0));
         }
+
+        basis_polynomials.reserve(N + 10);
+        for (auto& second_element: basis_polynomials) 
+            second_element.reserve(n + 5);
 
         for (int i = 1; i <= N + n - 1; ++i)
             construct_basis_polynomials(i, n);
@@ -80,9 +141,9 @@ public:
         coeff_matrix[N] = (knots[3].first - knots[2].first) / (knots[4].first + knots[3].first - 2 * knots[1].first);
 
         for (int i = 1; i < N - 1; ++i) {
-            coeff_matrix[(i - 1)*N + i] = basis_polynomials[i + 1][n][2](knots[i + 2].first);
+            coeff_matrix[i*N - N + i] = basis_polynomials[i + 1][n][2](knots[i + 2].first);
             coeff_matrix[i*N + i] = basis_polynomials[i + 2][n][1](knots[i + 2].first);
-            coeff_matrix[i*N + i + 1] = basis_polynomials[i + 3][n][0](knots[i + 2].first);
+            coeff_matrix[i*N + N + 1] = basis_polynomials[i + 3][n][0](knots[i + 2].first);
         }
 
         coeff_matrix[N*N - N - 1] = (knots[N + 1].first - knots[N].first) / (2 * knots[N + 2].first - knots[N + 2].first - knots[N - 1].first);
@@ -135,6 +196,10 @@ public:
             knots.push_back(std::make_pair(knots[N - 1 + i].first + i * h2, 0.0));
         }
 
+        basis_polynomials.reserve(N + 10);
+        for (auto& second_element: basis_polynomials) 
+            second_element.reserve(n + 5);
+
         for (int i = 1; i <= N + n - 1; ++i)
             construct_basis_polynomials(i, n);
 
@@ -143,9 +208,9 @@ public:
         coeff_matrix[0] = 1.0/3 + (knots[4].first - knots[2].first) / (2 * (knots[4].first + knots[3].first - 2 * knots[2].first));
 
         for (int i = 1; i < N - 1; ++i) {
-            coeff_matrix[(i - 1)*N + i] = basis_polynomials[i + 1][n][2](knots[i + 2].first);
+            coeff_matrix[i*N - N + i] = basis_polynomials[i + 1][n][2](knots[i + 2].first);
             coeff_matrix[i*N + i] = basis_polynomials[i + 2][n][1](knots[i + 2].first);
-            coeff_matrix[i*N + i + 1] = basis_polynomials[i + 3][n][0](knots[i + 2].first);
+            coeff_matrix[i*N + N + i] = basis_polynomials[i + 3][n][0](knots[i + 2].first);
         }
 
         coeff_matrix[N*N - 1] = 1.0/3 + (knots[N + 1].first - knots[N - 1].first) / (2 * (2 * knots[N + 1].first - knots[N].first - knots[N - 1].first));
@@ -198,6 +263,10 @@ public:
         knots.push_back(std::make_pair(knots[N + 2].first + knots[5].first - knots[3].first, knots[5].second));
         knots.push_back(std::make_pair(knots[N + 2].first + knots[6].first - knots[3].first, knots[6].second));
 
+        basis_polynomials.reserve(N + 10);
+        for (auto& second_element: basis_polynomials) 
+            second_element.reserve(n + 5);
+
         for (int i = 1; i <= N + n - 1; ++i)
             construct_basis_polynomials(i, n);
 
@@ -208,9 +277,9 @@ public:
         coeff_matrix[N * N - 2 * N] = basis_polynomials[1][n][2](knots[3].first);
 
         for (int i = 1; i < N - 1; ++i) {
-            coeff_matrix[(i - 1)*N + i] = basis_polynomials[i + 1][n][2](knots[i + 2].first);
+            coeff_matrix[i*N - N + i] = basis_polynomials[i + 1][n][2](knots[i + 2].first);
             coeff_matrix[i*N + i] = basis_polynomials[i + 2][n][1](knots[i + 2].first);
-            coeff_matrix[i*N + i + 1] = basis_polynomials[i + 3][n][0](knots[i + 2].first);
+            coeff_matrix[i*N + N + i] = basis_polynomials[i + 3][n][0](knots[i + 2].first);
         }
 
         coeff_matrix[2 * N - 1] = basis_polynomials[N + 2][n][0](knots[N + 2].first);
@@ -263,6 +332,10 @@ public:
             knots.insert(knots.begin(), std::make_pair(knots[0].first - h1, 0.0));
             knots.push_back(std::make_pair(knots[N - 1 + i].first + i * h2, 0.0));
         }
+
+        basis_polynomials.reserve(N + 2 * n + 1);
+        for (auto& second_element: basis_polynomials) 
+            second_element.reserve(n + 3);
 
         for (int i = 1; i <= N + n - 1; ++i)
             construct_basis_polynomials(i, n);

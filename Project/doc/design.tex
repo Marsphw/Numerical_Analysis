@@ -266,6 +266,7 @@ The B-splines are a special case of the PP-splines. From \cref{sec:pp-form-splin
       0 & \text{otherwise}.
     \end{cases}
   \end{equation}
+  \label{def:b-spline}
 \end{definition}
 
 \begin{theorem}
@@ -303,6 +304,71 @@ And we have a theorem about the derivatives of B-splines yielded by \cref{eq:b-s
     \frac{\mathrm{d}}{\mathrm{d}x}B_i^n(x) = \frac{nB_i^{n - 1}(x)}{t_{i + n + 1} - t_{i - 1}} - \frac{nB_{i + 1}^{n - 1}(x)}{t_{i + n} - t_i}, \quad \forall x \in \mathbb{R}.
     \label{eq:b-spline-derivative}
   \end{equation}
+\end{theorem}
+
+\subsubsection{Cardinal B-splines}
+
+\begin{definition}
+  The \textit{cardinal B-spline} of degree $n$, denoted by $B_{i, \mathbb{Z}}^n$, is the B-spline in the \cref{def:b-spline} on the knot set $\mathbb{Z}$.
+  \label{def:cardinal-b-spline}
+\end{definition}
+
+For this special kind of B-spline, we have two theorems.
+
+\begin{theorem}
+  There is a unique B-spline $S(x) \in \mathbb{S}_3^2$ that interpolates $f(x)$ at $1, 2, \cdots, N$ with $S'(1) = f'(1)$ and $S'(N) = f'(N)$. Furthermore, this B-spline is 
+  \begin{equation}
+    S(x) = \sum_{i = -1}^N a_i b_{i, \mathbb{Z}}^3(x),
+    \label{eq:cardinal-cubic-b-spline-interpolation}
+  \end{equation}
+  where 
+  \begin{equation}
+    a_{-1} = a_1 - 2f'(1),\quad a_N = a_{N - 2} + 2f'(N),
+    \label{eq:cardinal-cubic-b-spline-coefficients}
+  \end{equation}
+  and $\mathbf{a}^T = [a_0, a_1, \cdots, a_{N - 1}]$ is the solution of the linear system $M \mathbf{a} = \mathbf{b}$ with 
+  \begin{equation}
+    \begin{aligned}
+      \mathbf{b}^T &= [3f(1) + f'(1), 6f(2), \cdots, 6f(N - 1), 3f(N) - f'(N)], \\
+      M &= \begin{bmatrix}
+        2 & 1 &   &   &   \\
+        1 & 4 & 1 &   &   \\
+          & \ddots & \ddots & \ddots &   \\
+          &   & 1 & 4 & 1 \\
+          &   &   & 1 & 2
+      \end{bmatrix}.
+    \end{aligned}
+    \label{eq:cardinal-cubic-b-spline-linear-system}
+  \end{equation}
+  \label{thm:cardinal-cubic-b-spline-interpolation}
+\end{theorem}
+
+\begin{theorem}
+  There is a unique B-spline $S(x) \in \mathbb{S}_2^1$ that interpolates $f(x)$ at $t_i = i + \frac{1}{2}$ for each $i = 1, 2, \cdots, N$ with end conditions $S(1) = f(1)$ and $S(N) = f(N)$. Furthermore, this B-spline is 
+  \begin{equation}
+    S(x) = \sum_{i = 1}^N a_i B_{i, \mathbb{Z}}^2(x),
+    \label{eq:cardinal-quadratic-b-spline-interpolation}
+  \end{equation}
+  where 
+  \begin{equation}
+    a_0 = 2f(1) - a_1,\quad a_N = 2f(N) - a_{N - 1},
+    \label{eq:cardinal-quadratic-b-spline-coefficients}
+  \end{equation}
+  and $\mathbf{a}^T = [a_1, a_2, \cdots, a_N]$ is the solution of the linear system $M \mathbf{a} = \mathbf{b}$ with 
+  \begin{equation}
+    \begin{aligned}
+      \mathbf{b}^T &= [8f(\frac{3}{2}) - 2f(1), 8f(\frac{5}{2}), \cdots, 8f(N - \frac{3}{2}), 8f(N - \frac{1}{2}) - 2f(N)], \\
+      M &= \begin{bmatrix}
+        5 & 1 &   &   &   \\
+        1 & 6 & 1 &   &   \\
+          & \ddots & \ddots & \ddots &   \\
+          &   & 1 & 6 & 1 \\
+          &   &   & 1 & 5
+      \end{bmatrix}.
+    \end{aligned}
+    \label{eq:cardinal-quadratic-b-spline-linear-system}
+  \end{equation}
+  \label{thm:cardinal-quadratic-b-spline-interpolation}
 \end{theorem}
 
 \subsubsection{Linear B-splines}

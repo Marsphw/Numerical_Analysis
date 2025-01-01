@@ -11,7 +11,7 @@ compile:
 execute:
 	./ppForm_linear < ../data/ppForm_linear.in | python draw.py
 	./BSpline_linear < ../data/BSpline_linear.in | python draw.py
-	./ppForm_cubic | python draw.py
+	./ppForm_cubic | python draw_TaskA.py
 		
 
 clean:
