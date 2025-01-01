@@ -362,7 +362,7 @@ and $\mathbf{a}^T = [a_0, a_1, \cdots, a_{N - 1}]$ is the solution of the linear
 
 For the natural cubic B-splines, we have $S''(t_1) = 0, S''(t_N) = 0$. With the same formula in \cref{eq:complete-cubic-b-spline}, it follows 
 \begin{equation}
-  a_{-1} = -\frac{3(t_2 - t_1)}{t_3 + t_2 - 2t_1} a_1,\quad a_N = -\frac{3(t_N - t_{N - 1})}{2t_N - t_{N - 1} - t_{N - 2}},
+  a_{-1} = -\frac{3(t_2 - t_1)}{t_3 + t_2 - 2t_1} a_1,\quad a_N = -\frac{3(t_N - t_{N - 1})}{2t_N - t_{N - 1} - t_{N - 2}}a_{N - 2},
   \label{eq:natural-cubic-b-spline-coefficients}
 \end{equation}
 and the linear system $M\mathbf{a} = b$ with $\mathbf{a}^T = [a_0, a_1, \cdots, a_{N - 1}]$ is 
@@ -404,6 +404,12 @@ We have the linear system $M\mathbf{a} = \mathbf{b}$ with $\mathbf{a}^T = [a_0, 
     \end{bmatrix}.
   \end{aligned}
   \label{eq:periodic-cubic-b-spline-linear-system}
+\end{equation}
+
+Besides, it follows
+\begin{equation}
+  a_{-1} = a_{N - 2},\quad a_N = a_1.
+  \label{eq:periodic-cubic-b-spline-coefficients}
 \end{equation}
 
 \section{Method of solving linear systems}

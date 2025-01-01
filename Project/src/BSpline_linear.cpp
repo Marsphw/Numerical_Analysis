@@ -13,6 +13,5 @@ int main() {
     printf("1\n");
     printf("Linear B-spline:\n");
     sp.generate_data();
-    //sp.show_polynomials();
     return 0;
 }
