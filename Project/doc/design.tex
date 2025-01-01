@@ -85,6 +85,72 @@ In this project, the file structure is shown as follows:
   \item \verb|Makefile| -- the makefile used to compile, run the project and generate the documents.
 \end{itemize}
 
+\section{Header Files}
+
+The header files used in the project are listed as follows:
+\begin{itemize}
+  \item \verb|Bspline.h| -- implements the B-spline.
+  \item \verb|Polynomial.h| -- implements the polynomials used in the splines.
+  \item \verb|ppForm.h| -- implements the pp-form splines.
+  \item \verb|Solving_Equation.h| -- implements the solving process of the linear system of equations.
+  \item \verb|Spline.h| -- implements the base class of the splines.
+\end{itemize}
+
+\section{The Interface of Classes}
+
+\subsection{Bspline.h}
+
+\begin{enumerate}
+  \item \verb|Bspline(int nn, int NN, std::vector<std::pair<double, double>> knots_in, std::vector<double> bc = {})| -- constructor of the B-spline.
+  \item \verb|void construct_basis_polynomials(int i, int ni)| -- constructs the basis polynomials $B_{ni}^i$.
+  \item \verb|Spline linear_Bspline()| -- constructs the linear B-spline.
+  \item \verb|Spline cardinal_quad_Bspline()| -- constructs the cardinal quadratic B-spline.
+  \item \verb|Spline complete_cubic_Bspline()| -- constructs the complete cubic B-spline.
+  \item \verb|Spline natural_cubic_Bspline()| -- constructs the natural cubic B-spline.
+  \item \verb|Spline periodic_cubic_Bspline()| -- constructs the periodic cubic B-spline.
+  \item \verb|Spline arbitrary_order_Bspline(double a[])| -- constructs the arbitrary order B-spline according to the given coefficients $a_i$.
+\end{enumerate}
+
+\subsection{Polynomial.h}
+
+\begin{enumerate}
+  \item \verb|Polynomial(int de, std::vector<double> co): degree(de), coeffs(co)| -- constructor of the polynomial.
+  \item \verb|double operator() (double x) const| -- evaluates the polynomial at $x$.
+  \item \verb|double derivative(double x) const| -- evaluates the derivative of the polynomial at $x$.
+  \item \verb|Polynomial operator* (const Polynomial& other) const| -- computes the product of two polynomials.
+  \item \verb|Polynomial operator+ (const Polynomial& other) const| -- computes the sum of two polynomials.
+  \item \verb|void show() const| -- prints the polynomial.
+\end{enumerate}
+
+\subsection{ppForm.h}
+
+\begin{enumerate}
+  \item \verb|PPForm(int nn, int kk, int NN, std::vector<std::pair<double, double>> knots_in, std::vector<double> bc = {})| -- constructor of the pp-form spline.
+  \item \verb|Spline linear_splines()| -- constructs the linear pp-form splines.
+  \item \verb|double get_lambda(int i)| -- returns the $\lambda_i$ of the pp-form spline.
+  \item \verb|double get_mu(int i)| -- returns the $\mu_i$ of the pp-form spline.
+  \item \verb|double get_K(int i)| -- returns the $K_i$ of the pp-form spline.
+  \item \verb|std::vector<Polynomial> construct_polynomials(double *solution)| -- constructs the polynomials of the pp-form spline.
+  \item \verb|Spline complete_cubic_ppform()| -- constructs the complete cubic pp-form spline.
+  \item \verb|Spline natural_cubic_ppform()| -- constructs the natural cubic pp-form spline.
+  \item \verb|Spline periodic_cubic_ppform()| -- constructs the periodic cubic pp-form spline.
+\end{enumerate}
+
+\subsection{Solving\_Equation.h}
+
+\begin{enumerate}
+  \item \verb|EquationSolver(int n, double *a, double *rhs): N(n), A(a), b(rhs)| -- constructor of the equation solver.
+  \item \verb|double* solve()| -- solves the linear system of equations.
+\end{enumerate}
+
+\subsection{Spline.h}
+
+\begin{enumerate}
+  \item \verb|Spline(int NN, std::vector<std::pair<double, double>> knots_in, std::vector<Polynomial> s_in)| -- constructor of the spline.
+  \item \verb|void generate_data()| -- generates the sample data.
+  \item \verb|void show_polynomials()| -- prints the polynomials of the spline.
+\end{enumerate}
+
 \section{Splines}
 
 \subsection{Introduction}
