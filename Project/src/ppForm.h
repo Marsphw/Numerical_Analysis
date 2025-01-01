@@ -116,7 +116,7 @@ public:
     
 private:
     int n, k, N; //S_n^k spline
-    double* boundary_conditions; //boundary conditions, the number of elements equals to k
+    double boundary_conditions[5]; //boundary conditions, the number of elements equals to k
     std::vector<std::pair<double, double>> knots; //knot vector
 };
 
