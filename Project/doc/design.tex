@@ -410,7 +410,7 @@ where $a_i$ are the coefficients and
 we can write the linear system for the coefficients $M\mathbf{a} = \mathbf{b}$ with
 \begin{equation}
   \begin{aligned}
-    \mathbf{b}^T &= [f(t_1) + \frac{(t_2 - t_1)f'(t_1)}{3}, f(t_2), \cdots, f(t_{N - 1}), f(t_N) - \frac{t_N - t_{N - 1}f'(t_N)}{3}], \\
+    \mathbf{b}^T &= [f(t_1) + \frac{(t_2 - t_1)f'(t_1)}{3}, f(t_2), \cdots, f(t_{N - 1}), f(t_N) - \frac{(t_N - t_{N - 1})f'(t_N)}{3}], \\
     M &= \begin{bmatrix}
       \frac{1}{3} + \frac{t_3 - t_1}{2(t_3 + t_2 - 2t_1)} & \frac{t_2 - t_1}{t_3 + t_2 - 2t_1} &    &    &    \\
       B_0^3(t_2) & B_1^3(t_2) & B_2^3(t_2) &    &    \\

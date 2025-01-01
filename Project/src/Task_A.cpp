@@ -12,9 +12,9 @@ double der_func(double x){
 
 int main() {
     int N[5] = {6, 11, 21, 41, 81};
-    double boundary[2];
-    boundary[0] = der_func(-1.0);
-    boundary[1] = der_func(1.0);
+    std::vector<double> boundary;
+    boundary.push_back(der_func(-1.0));
+    boundary.push_back(der_func(1.0));
     printf("5\n");
     for (int i = 0; i < 5; ++i) {
         double h = 2.0 / (N[i] - 1);

@@ -11,7 +11,7 @@ int main() {
     Bspline form(1, N, knots);
     Spline sp = form.linear_Bspline();
     printf("1\n");
-    printf("Linear B-spline:\n");
+    printf("Linear B-spline\n");
     sp.generate_data();
     return 0;
 }

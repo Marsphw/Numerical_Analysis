@@ -17,6 +17,7 @@ public:
             if (x >= knots[i].first && x <= knots[i + 1].first)
                 return s[i](x);
         }
+        return 0.0;
     }
 
     void generate_data() {
@@ -25,8 +26,9 @@ public:
             printf("%.6f\n%.6f\n", knots[i].first, knots[i].second);
         double span = knots[N - 1].first - knots[0].first;
         double step = span / 1000;
-        for (double x = knots[0].first; x <= knots[N - 1].first; x += step) 
-            printf("%.6f\n", (*this)(x));
+        double x = knots[0].first;
+        for (int i = 0; i < 1000; ++i) 
+            printf("%.6f\n", (*this)(x + i * step));
     }
 
     void show_polynomials() {

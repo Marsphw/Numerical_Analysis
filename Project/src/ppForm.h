@@ -10,7 +10,12 @@
 class PPForm {
 
 public:
-    PPForm(int nn, int kk, int NN, std::vector<std::pair<double, double>> knots_in, double *bc = nullptr): n(nn), k(kk), N(NN), knots(knots_in), boundary_conditions(bc) {}
+    PPForm(int nn, int kk, int NN, std::vector<std::pair<double, double>> knots_in, std::vector<double> bc = {}): n(nn), k(kk), N(NN), knots(knots_in) {
+        if (!bc.empty()) {
+            for (int i = 0; i < bc.size(); ++i)
+                boundary_conditions[i] = bc[i];
+        }
+    }
 
     Spline linear_splines() {
         std::vector<Polynomial> S;

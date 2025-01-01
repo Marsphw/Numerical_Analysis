@@ -8,18 +8,16 @@
 class EquationSolver {
 
 private:
-    int N;
-    double *A, *b, *x;
+    lapack_int N;
+    double *A, *b;
 
 public:
-    EquationSolver(int n, double *a, double *rhs): N(n), A(a), b(rhs), x(new double[n]) {}
+    EquationSolver(int n, double *a, double *rhs): N(n), A(a), b(rhs) {}
 
     double* solve() {
-        int IPIV[N];
-        for (int i = 0; i < N; i++)
-            IPIV[i] = 0;
-        int INFO = 0;
-        INFO = LAPACKE_dgetrf(LAPACK_ROW_MAJOR, N, N, A, N, IPIV);
+        lapack_int IPIV[N];
+        lapack_int INFO = 0;
+        /*INFO = LAPACKE_dgetrf(LAPACK_ROW_MAJOR, N, N, A, N, IPIV);
         if (INFO != 0) {
             std::cout << "Error in LU factorization" << std::endl;
             return NULL;
@@ -28,10 +26,13 @@ public:
         if (INFO != 0) {
             std::cout << "Error in solving equation" << std::endl;
             return NULL;
+        }*/
+        INFO = LAPACKE_dgesv(LAPACK_COL_MAJOR, N, 1, A, N, IPIV, b, N);
+        if (INFO != 0) {
+            std::cout << "Error in solving equation" << std::endl;
+            return NULL;
         }
-        for (int i = 0; i < N; i++)
-            x[i] = b[i];
-        return x;
+        return b;
     }
 
 };
